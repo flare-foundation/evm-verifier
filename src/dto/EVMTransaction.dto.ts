@@ -147,142 +147,178 @@ class IsEVMAddress implements ValidatorConstraintInterface {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////// DTOs /////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-export class TypeTemplate_RequestSubstruct2 {
-    constructor(params: Required<TypeTemplate_RequestSubstruct2>) {
+
+export class EVMTransaction_Event {
+    constructor(params: Required<EVMTransaction_Event>) {
         Object.assign(this, params);
     }
 
     /**
-     * example bytes32 field with explanation
+     * The consecutive number of the event in block.
      */
-    @Validate(IsHash32)
-    @ApiProperty({ description: `example bytes32 field with explanation`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-    templateStructField!: string;
+    @Validate(IsUnsignedIntLike)
+    @ApiProperty({ description: `The consecutive number of the event in block.`, example: "123" })
+    logIndex!: string;
 
     /**
-     * example int256 array field with explanation
+     * The address of the contract that emitted the event.
      */
-    @Validate(IsUnsignedIntLike, { each: true })
-    @ApiProperty({ description: `example int256 array field with explanation`, example: ["123"] })
-    intArrayField!: string[];
+    @Validate(IsEVMAddress)
+    @ApiProperty({ description: `The address of the contract that emitted the event.`, example: "0x5d4BEB38B6b71aaF6e30D0F9FeB6e21a7Ac40b3a" })
+    emitterAddress!: string;
 
     /**
-     * example bool array field with explanation*
+     * An array of up to 4 32-byte strings of indexed log arguments. The first string is the signature of the event.
      */
-    @IsBoolean({ each: true })
-    @ApiProperty({ description: `example bool array field with explanation*`, example: [true] })
-    boolArrayField!: boolean[];
-}
-export class TypeTemplate_RequestSubstruct1 {
-    constructor(params: Required<TypeTemplate_RequestSubstruct1>) {
-        Object.assign(this, params);
-    }
+    @Validate(IsHash32, { each: true })
+    @ApiProperty({
+        description: `An array of up to 4 32-byte strings of indexed log arguments. The first string is the signature of the event.`,
+        example: ["0x0000000000000000000000000000000000000000000000000000000000000000"],
+    })
+    topics!: string[];
 
     /**
-     * example bytes32 field with explanation
+     * Concatenated 32-byte strings of non-indexed log arguments. At least 32 bytes long.
      */
-    @Validate(IsHash32)
-    @ApiProperty({ description: `example bytes32 field with explanation`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-    templateStructField!: string;
+    @Validate(Is0xHex)
+    @ApiProperty({ description: `Concatenated 32-byte strings of non-indexed log arguments. At least 32 bytes long.`, example: "0x1234abcd" })
+    data!: string;
 
     /**
-     * example uint256 array field with explanation
-     */
-    @Validate(IsUnsignedIntLike, { each: true })
-    @ApiProperty({ description: `example uint256 array field with explanation`, example: ["123"] })
-    uintArrayField!: string[];
-
-    /**
-     * example bool array field with explanation*
-     */
-    @IsBoolean({ each: true })
-    @ApiProperty({ description: `example bool array field with explanation*`, example: [true] })
-    boolArrayField!: boolean[];
-}
-export class TypeTemplate_ResponseSubstruct1 {
-    constructor(params: Required<TypeTemplate_ResponseSubstruct1>) {
-        Object.assign(this, params);
-    }
-
-    /**
-     * description*
-     */
-    @Validate(IsHash32)
-    @ApiProperty({ description: `description*`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-    templateStructField!: string;
-}
-export class TypeTemplate_ResponseBody {
-    constructor(params: Required<TypeTemplate_ResponseBody>) {
-        Object.assign(this, params);
-    }
-
-    /**
-     * example bytes32 field with explanation
-     */
-    @Validate(IsHash32)
-    @ApiProperty({ description: `example bytes32 field with explanation`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-    templateResponseField!: string;
-
-    /**
-     * example ResponseSubstruct1 array field with explanation*
-     */
-    @ValidateNested({ each: true })
-    @Type(() => TypeTemplate_ResponseSubstruct1)
-    @IsDefined({ each: true })
-    @IsObject({ each: true })
-    @ApiProperty({ description: `example ResponseSubstruct1 array field with explanation*` })
-    responseSubstruct1Array!: TypeTemplate_ResponseSubstruct1[];
-}
-export class TypeTemplate_RequestBody {
-    constructor(params: Required<TypeTemplate_RequestBody>) {
-        Object.assign(this, params);
-    }
-
-    /**
-     * example bytes32 field with explanation
-     */
-    @Validate(IsHash32)
-    @ApiProperty({ description: `example bytes32 field with explanation`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-    bytes32Field!: string;
-
-    /**
-     * example bool field field with explanation
+     * It is true if log was removed due to a chain reorganization and false if it is a valid log.
      */
     @IsBoolean()
-    @ApiProperty({ description: `example bool field field with explanation`, example: true })
-    boolField!: boolean;
-
-    /**
-     * example RequestSubstruct1 field with explanation
-     */
-    @ValidateNested()
-    @Type(() => TypeTemplate_RequestSubstruct1)
-    @IsDefined()
-    @IsNotEmptyObject()
-    @IsObject()
-    @ApiProperty({ description: `example RequestSubstruct1 field with explanation` })
-    requestSubstruct1!: TypeTemplate_RequestSubstruct1;
-
-    /**
-     * example RequestSubstruct2 array field with explanation*
-     */
-    @ValidateNested({ each: true })
-    @Type(() => TypeTemplate_RequestSubstruct2)
-    @IsDefined({ each: true })
-    @IsObject({ each: true })
-    @ApiProperty({ description: `example RequestSubstruct2 array field with explanation*` })
-    requestSubstruct2Array!: TypeTemplate_RequestSubstruct2[];
+    @ApiProperty({ description: `It is true if log was removed due to a chain reorganization and false if it is a valid log.`, example: true })
+    removed!: boolean;
 }
-export class TypeTemplate_Request {
-    constructor(params: Required<TypeTemplate_Request>) {
+export class EVMTransaction_ResponseBody {
+    constructor(params: Required<EVMTransaction_ResponseBody>) {
         Object.assign(this, params);
     }
 
     /**
-     * Id of the attestation type.
+     * Number of the block in which the transaction is included.
+     */
+    @Validate(IsUnsignedIntLike)
+    @ApiProperty({ description: `Number of the block in which the transaction is included.`, example: "123" })
+    blockNumber!: string;
+
+    /**
+     * Timestamp of the block in which the transaction is included.
+     */
+    @Validate(IsUnsignedIntLike)
+    @ApiProperty({ description: `Timestamp of the block in which the transaction is included.`, example: "123" })
+    timestamp!: string;
+
+    /**
+     * The address (from) that signed the transaction.
+     */
+    @Validate(IsEVMAddress)
+    @ApiProperty({ description: `The address (from) that signed the transaction.`, example: "0x5d4BEB38B6b71aaF6e30D0F9FeB6e21a7Ac40b3a" })
+    sourceAddress!: string;
+
+    /**
+     * The address (to) of the receiver of the initial transaction.
+     */
+    @Validate(IsEVMAddress)
+    @ApiProperty({ description: `The address (to) of the receiver of the initial transaction.`, example: "0x5d4BEB38B6b71aaF6e30D0F9FeB6e21a7Ac40b3a" })
+    receivingAddress!: string;
+
+    /**
+     * The value transferred by the initial transaction in wei.
+     */
+    @Validate(IsUnsignedIntLike)
+    @ApiProperty({ description: `The value transferred by the initial transaction in wei.`, example: "123" })
+    value!: string;
+
+    /**
+     * If `provideInput`, this is the data send along with the initial transaction. Otherwise it is the default value `0x`.
+     */
+    @Validate(Is0xHex)
+    @ApiProperty({
+        description: `If 'provideInput', this is the data send along with the initial transaction. Otherwise it is the default value '0x'.`,
+        example: "0x1234abcd",
+    })
+    input!: string;
+
+    /**
+     * Status of the transaction 1 - success, 0 - failure.
+     */
+    @Validate(IsUnsignedIntLike)
+    @ApiProperty({ description: `Status of the transaction 1 - success, 0 - failure.`, example: "123" })
+    status!: string;
+
+    /**
+     * If `listEvents` is true, an array of the requested events. Sorted by the logIndex in the same order as `logIndices`. Otherwise, an empty array.
+     */
+    @ValidateNested({ each: true })
+    @Type(() => EVMTransaction_Event)
+    @IsDefined({ each: true })
+    @IsObject({ each: true })
+    @ApiProperty({
+        description: `If 'listEvents' is true, an array of the requested events. Sorted by the logIndex in the same order as 'logIndices'. Otherwise, an empty array.`,
+    })
+    events!: EVMTransaction_Event[];
+}
+export class EVMTransaction_RequestBody {
+    constructor(params: Required<EVMTransaction_RequestBody>) {
+        Object.assign(this, params);
+    }
+
+    /**
+     * Hash of the transaction(transactionHash).
      */
     @Validate(IsHash32)
-    @ApiProperty({ description: `Id of the attestation type.`, example: "0x5479706554656d706c6174650000000000000000000000000000000000000000" })
+    @ApiProperty({ description: `Hash of the transaction(transactionHash).`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
+    transactionHash!: string;
+
+    /**
+     * The height at which a block is considered confirmed by the requestor.
+     */
+    @Validate(IsUnsignedIntLike)
+    @ApiProperty({ description: `The height at which a block is considered confirmed by the requestor.`, example: "123" })
+    requiredConfirmations!: string;
+
+    /**
+     * If true, "input" field is included in the response.
+     */
+    @IsBoolean()
+    @ApiProperty({ description: `If true, "input" field is included in the response.`, example: true })
+    provideInput!: boolean;
+
+    /**
+     * If true, events indicated by `logIndices` are included in the response. Otherwise, no events are included in the response.
+     */
+    @IsBoolean()
+    @ApiProperty({
+        description: `If true, events indicated by 'logIndices' are included in the response. Otherwise, no events are included in the response.`,
+        example: true,
+    })
+    listEvents!: boolean;
+
+    /**
+     * Indices of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.
+     */
+    @Validate(IsUnsignedIntLike, { each: true })
+    @ApiProperty({
+        description: `Indices of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.`,
+        example: ["123"],
+    })
+    logIndices!: string[];
+}
+export class EVMTransaction_Request {
+    constructor(params: Required<EVMTransaction_Request>) {
+        Object.assign(this, params);
+    }
+
+    /**
+     * Attestation type id as defined for each attestation type on [this repo](https://gitlab.com/flarenetwork/state-connector-protocol/)
+     */
+    @Validate(IsHash32)
+    @ApiProperty({
+        description: `Attestation type id as defined for each attestation type on [this repo](https://gitlab.com/flarenetwork/state-connector-protocol/)`,
+        example: "0x45564d5472616e73616374696f6e000000000000000000000000000000000000",
+    })
     attestationType!: string;
 
     /**
@@ -306,15 +342,15 @@ export class TypeTemplate_Request {
      * Data defining the request. Type (struct) and interpretation is determined by the `attestationType`.
      */
     @ValidateNested()
-    @Type(() => TypeTemplate_RequestBody)
+    @Type(() => EVMTransaction_RequestBody)
     @IsDefined()
     @IsNotEmptyObject()
     @IsObject()
     @ApiProperty({ description: `Data defining the request. Type (struct) and interpretation is determined by the 'attestationType'.` })
-    requestBody!: TypeTemplate_RequestBody;
+    requestBody!: EVMTransaction_RequestBody;
 }
-export class TypeTemplate_Response {
-    constructor(params: Required<TypeTemplate_Response>) {
+export class EVMTransaction_Response {
+    constructor(params: Required<EVMTransaction_Response>) {
         Object.assign(this, params);
     }
 
@@ -322,7 +358,7 @@ export class TypeTemplate_Response {
      * Extracted from the request.
      */
     @Validate(IsHash32)
-    @ApiProperty({ description: `Extracted from the request.`, example: "0x5479706554656d706c6174650000000000000000000000000000000000000000" })
+    @ApiProperty({ description: `Extracted from the request.`, example: "0x45564d5472616e73616374696f6e000000000000000000000000000000000000" })
     attestationType!: string;
 
     /**
@@ -350,28 +386,28 @@ export class TypeTemplate_Response {
      * Extracted from the request.
      */
     @ValidateNested()
-    @Type(() => TypeTemplate_RequestBody)
+    @Type(() => EVMTransaction_RequestBody)
     @IsDefined()
     @IsNotEmptyObject()
     @IsObject()
     @ApiProperty({ description: `Extracted from the request.` })
-    requestBody!: TypeTemplate_RequestBody;
+    requestBody!: EVMTransaction_RequestBody;
 
     /**
      * Data defining the response. The verification rules for the construction of the response body and the type are defined per specific `attestationType`.
      */
     @ValidateNested()
-    @Type(() => TypeTemplate_ResponseBody)
+    @Type(() => EVMTransaction_ResponseBody)
     @IsDefined()
     @IsNotEmptyObject()
     @IsObject()
     @ApiProperty({
         description: `Data defining the response. The verification rules for the construction of the response body and the type are defined per specific 'attestationType'.`,
     })
-    responseBody!: TypeTemplate_ResponseBody;
+    responseBody!: EVMTransaction_ResponseBody;
 }
-export class TypeTemplate_Proof {
-    constructor(params: Required<TypeTemplate_Proof>) {
+export class EVMTransaction_Proof {
+    constructor(params: Required<EVMTransaction_Proof>) {
         Object.assign(this, params);
     }
 
@@ -389,14 +425,14 @@ export class TypeTemplate_Proof {
      * Attestation response.
      */
     @ValidateNested()
-    @Type(() => TypeTemplate_Response)
+    @Type(() => EVMTransaction_Response)
     @IsDefined()
     @IsNotEmptyObject()
     @IsObject()
     @ApiProperty({ description: `Attestation response.` })
-    data!: TypeTemplate_Response;
+    data!: EVMTransaction_Response;
 }
 
-export class TypeTemplate_RequestNoMic extends OmitType<TypeTemplate_Request, "messageIntegrityCode">(TypeTemplate_Request, [
+export class EVMTransaction_RequestNoMic extends OmitType<EVMTransaction_Request, "messageIntegrityCode">(EVMTransaction_Request, [
     "messageIntegrityCode",
 ] as const) {}

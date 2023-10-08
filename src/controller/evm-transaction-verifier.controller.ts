@@ -6,16 +6,16 @@ import { Body, Controller, HttpCode, Post, UseGuards } from "@nestjs/common";
 import { ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { ApiKeyAuthGuard } from "../auth/apikey.guard";
 
-import { TypeTemplateVerifierService } from "../service/type-template-verifier.service";
-import { TypeTemplate_RequestNoMic, TypeTemplate_Response } from "../dto/TypeTemplate.dto";
+import { EVMTransactionVerifierService } from "../service/evm-transaction-verifier.service";
+import { EVMTransaction_RequestNoMic, EVMTransaction_Response } from "../dto/EVMTransaction.dto";
 import { AttestationResponseDTO, EncodedRequestBody, MicResponse } from "../dto/generic.dto";
 
-@ApiTags("TypeTemplate")
-@Controller("TypeTemplate")
+@ApiTags("EVMTransaction")
+@Controller("EVMTransaction")
 @UseGuards(ApiKeyAuthGuard)
 @ApiSecurity("X-API-KEY")
-export class TypeTemplateVerifierController {
-    constructor(private readonly verifierService: TypeTemplateVerifierService) {}
+export class EVMTransactionVerifierController {
+    constructor(private readonly verifierService: EVMTransactionVerifierService) {}
 
     /**
      *
@@ -25,7 +25,7 @@ export class TypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post()
-    async verify(@Body() body: EncodedRequestBody): Promise<AttestationResponseDTO<TypeTemplate_Response>> {
+    async verify(@Body() body: EncodedRequestBody): Promise<AttestationResponseDTO<EVMTransaction_Response>> {
         return this.verifierService.verifyEncodedRequest(body.abiEncodedRequest!);
     }
 
@@ -36,7 +36,7 @@ export class TypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post("prepareResponse")
-    async prepareResponse(@Body() body: TypeTemplate_RequestNoMic): Promise<AttestationResponseDTO<TypeTemplate_Response>> {
+    async prepareResponse(@Body() body: EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO<EVMTransaction_Response>> {
         return this.verifierService.prepareResponse(body);
     }
 
@@ -46,7 +46,7 @@ export class TypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post("mic")
-    async mic(@Body() body: TypeTemplate_RequestNoMic): Promise<MicResponse> {
+    async mic(@Body() body: EVMTransaction_RequestNoMic): Promise<MicResponse> {
         return {
             messageIntegrityCode: await this.verifierService.mic(body),
         } as MicResponse;
@@ -59,7 +59,7 @@ export class TypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post("prepareRequest")
-    async prepareRequest(@Body() body: TypeTemplate_RequestNoMic): Promise<EncodedRequestBody> {
+    async prepareRequest(@Body() body: EVMTransaction_RequestNoMic): Promise<EncodedRequestBody> {
         return {
             abiEncodedRequest: await this.verifierService.prepareRequest(body),
         } as EncodedRequestBody;

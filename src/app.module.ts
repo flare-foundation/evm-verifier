@@ -4,8 +4,8 @@ import { ApiKeyStrategy } from "./auth/apikey.strategy";
 import { AuthModule } from "./auth/auth.module";
 import { AuthService } from "./auth/auth.service";
 import configuration from "./config/configuration";
-import { TypeTemplateVerifierController } from "./controller/type-template-verifier.controller";
-import { TypeTemplateVerifierService } from "./service/type-template-verifier.service";
+import { EVMTransactionVerifierController } from "./controller/evm-transaction-verifier.controller";
+import { EVMTransactionVerifierService } from "./service/evm-transaction-verifier.service";
 
 @Module({
     imports: [
@@ -15,7 +15,7 @@ import { TypeTemplateVerifierService } from "./service/type-template-verifier.se
         }),
         AuthModule,
     ],
-    controllers: [TypeTemplateVerifierController],
-    providers: [ApiKeyStrategy, AuthService, TypeTemplateVerifierService],
+    controllers: [EVMTransactionVerifierController],
+    providers: [ApiKeyStrategy, AuthService, EVMTransactionVerifierService],
 })
 export class AppModule {}

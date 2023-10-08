@@ -1,22 +1,22 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { TypeTemplateVerifierService } from "../service/type-template-verifier.service";
-import { TypeTemplateVerifierController } from "./type-template-verifier.controller";
+import { EVMTransactionVerifierService } from "../service/evm-transaction-verifier.service";
+import { EVMTransactionVerifierController } from "./evm-transaction-verifier.controller";
 import { readFileSync } from "fs";
 import { ExampleData } from "../external-libs/ts/interfaces";
-import { TypeTemplate_RequestNoMic, TypeTemplate_Request, TypeTemplate_Response } from "../dto/TypeTemplate.dto";
+import { EVMTransaction_RequestNoMic, EVMTransaction_Request, EVMTransaction_Response } from "../dto/EVMTransaction.dto";
 
 describe("AppController", () => {
-    let appController: TypeTemplateVerifierController;
-    let exampleData: ExampleData<TypeTemplate_RequestNoMic, TypeTemplate_Request, TypeTemplate_Response>;
+    let appController: EVMTransactionVerifierController;
+    let exampleData: ExampleData<EVMTransaction_RequestNoMic, EVMTransaction_Request, EVMTransaction_Response>;
 
     beforeEach(async () => {
         const app: TestingModule = await Test.createTestingModule({
-            controllers: [TypeTemplateVerifierController],
-            providers: [TypeTemplateVerifierService],
+            controllers: [EVMTransactionVerifierController],
+            providers: [EVMTransactionVerifierService],
         }).compile();
 
-        appController = app.get<TypeTemplateVerifierController>(TypeTemplateVerifierController);
-        exampleData = JSON.parse(readFileSync("src/example-data/TypeTemplate.json", "utf8"));
+        appController = app.get<EVMTransactionVerifierController>(EVMTransactionVerifierController);
+        exampleData = JSON.parse(readFileSync("src/example-data/EVMTransaction.json", "utf8"));
     });
 
     describe("root", () => {
