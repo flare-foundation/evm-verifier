@@ -1,6 +1,9 @@
 export interface IConfig {
+    // server port (PORT)
     port: number;
+    // comma separated list of API keys (API_KEYS)
     api_keys: string[];
+    // RPC endpoint (RPC)
     rpc: string;
 }
 
