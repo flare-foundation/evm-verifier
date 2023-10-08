@@ -1,5 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { JsonRpcProvider, ethers } from "ethers";
 import { readFileSync } from "fs";
+import { IConfig } from "../config/configuration";
 import {
     EVMTransaction_Event,
     EVMTransaction_Request,
@@ -7,21 +10,20 @@ import {
     EVMTransaction_Response,
     EVMTransaction_ResponseBody,
 } from "../dto/EVMTransaction.dto";
+import { AttestationResponseDTO } from "../dto/generic.dto";
 import { AttestationDefinitionStore } from "../external-libs/ts/AttestationDefinitionStore";
 import { AttestationResponse, AttestationResponseStatus } from "../external-libs/ts/AttestationResponse";
 import { ExampleData } from "../external-libs/ts/interfaces";
-import { MIC_SALT, encodeAttestationName } from "../external-libs/ts/utils";
-import { ConfigService } from "@nestjs/config";
-import { IConfig } from "../config/configuration";
-import { JsonRpcProvider, ethers } from "ethers";
-import { AttestationResponseDTO } from "../dto/generic.dto";
+import { MIC_SALT, encodeAttestationName, serializeBigInts } from "../external-libs/ts/utils";
 
 @Injectable()
 export class EVMTransactionVerifierService {
     store!: AttestationDefinitionStore;
     exampleData!: ExampleData<EVMTransaction_RequestNoMic, EVMTransaction_Request, EVMTransaction_Response>;
-    web3Provider!: JsonRpcProvider;
+
     //-$$$<start-constructor> Start of custom code section. Do not change this comment.
+
+    web3Provider!: JsonRpcProvider;
 
     constructor(private configService: ConfigService<IConfig>) {
         this.store = new AttestationDefinitionStore("type-definitions");
@@ -104,7 +106,7 @@ export class EVMTransactionVerifierService {
                 sourceId: request.sourceId,
                 votingRound: "0",
                 lowestUsedTimestamp: block.timestamp.toString(),
-                requestBody: request.requestBody,
+                requestBody: serializeBigInts(request.requestBody),
                 responseBody: {
                     blockNumber: block.number.toString(),
                     timestamp: block.timestamp.toString(),
@@ -134,8 +136,6 @@ export class EVMTransactionVerifierService {
     }
 
     public async prepareResponse(request: EVMTransaction_RequestNoMic): Promise<AttestationResponse<EVMTransaction_Response>> {
-        console.dir(request, { depth: null });
-
         //-$$$<start-prepareResponse> Start of custom code section. Do not change this comment.
 
         const response = await this.verifyRequest(request);
@@ -146,8 +146,6 @@ export class EVMTransactionVerifierService {
     }
 
     public async mic(request: EVMTransaction_RequestNoMic): Promise<string | undefined> {
-        console.dir(request, { depth: null });
-
         //-$$$<start-mic> Start of custom code section. Do not change this comment.
 
         const result = await this.verifyRequest(request);

@@ -223,8 +223,8 @@
         },
         {
           "name": "topics",
-          "type": "bytes32[4]",
-          "typeSimple": "bytes32[4]",
+          "type": "bytes32[]",
+          "typeSimple": "bytes32[]",
           "comment": "An array of up to 4 32-byte strings of indexed log arguments. The first string is the signature of the event."
         },
         {
@@ -400,9 +400,9 @@
                 "type": "address"
               },
               {
-                "internalType": "bytes32[4]",
+                "internalType": "bytes32[]",
                 "name": "topics",
-                "type": "bytes32[4]"
+                "type": "bytes32[]"
               },
               {
                 "internalType": "bytes",
@@ -540,9 +540,9 @@
                     "type": "address"
                   },
                   {
-                    "internalType": "bytes32[4]",
+                    "internalType": "bytes32[]",
                     "name": "topics",
-                    "type": "bytes32[4]"
+                    "type": "bytes32[]"
                   },
                   {
                     "internalType": "bytes",
