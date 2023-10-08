@@ -42,11 +42,7 @@ $ yarn test:e2e
 # test coverage
 $ yarn test:cov
 ```
-## License
-
-This template is under [MIT licensed](LICENSE).
-
-## Example successful request on Flare network
+## Example on Flare network
 
 Copy `.env.example` file and rename it to `.env`.
 Run the code with `yarn start:dev`
@@ -69,3 +65,11 @@ Test API routes `/EVMTransaction/prepareResponse`, `/EVMTransaction/mic` and `/E
 ```
 
 In order to test the API route `/EVMTransaction` use the output of `/EVMTransaction/prepareRequest`.
+
+## Configuration
+
+Configuration of the verifier server is carried out through environment variables, specifically by using standard `ConfigModule` from Nest.js, which gets configured from `.env` file in the root of the repository (working directory when run). See details [here](./src/config/configuration.ts).
+
+## License
+
+This template is under [MIT licensed](LICENSE).
