@@ -14,7 +14,7 @@ import { AttestationResponseDTO } from "../dto/generic.dto";
 import { AttestationDefinitionStore } from "../external-libs/ts/AttestationDefinitionStore";
 import { AttestationResponse, AttestationResponseStatus } from "../external-libs/ts/AttestationResponse";
 import { ExampleData } from "../external-libs/ts/interfaces";
-import { MIC_SALT, encodeAttestationName, serializeBigInts } from "../external-libs/ts/utils";
+import { MIC_SALT, ZERO_BYTES_20, ZERO_BYTES_32, encodeAttestationName, serializeBigInts } from "../external-libs/ts/utils";
 
 @Injectable()
 export class EVMTransactionVerifierService {
@@ -111,7 +111,8 @@ export class EVMTransactionVerifierService {
                     blockNumber: block.number.toString(),
                     timestamp: block.timestamp.toString(),
                     sourceAddress: txInfo.from!,
-                    receivingAddress: txInfo.to!, // !!! can be empty in the response (TODO: how to handle this in hashing)
+                    isDeployment: !txInfo.to,
+                    receivingAddress: txInfo.to ? txInfo.to : ZERO_BYTES_20, // !!! can be empty in the response (TODO: how to handle this in hashing)
                     value: txInfo.value.toString(),
                     input: request.requestBody.provideInput ? txInfo.data : "0x00", // !!! can be empty in the response (TODO: how to handle this in hashing),
                     status: txReceipt.status ? "1" : "0",
@@ -125,7 +126,6 @@ export class EVMTransactionVerifierService {
 
     public async verifyEncodedRequest(abiEncodedRequest: string): Promise<AttestationResponse<EVMTransaction_Response>> {
         const requestJSON = this.store.parseRequest<EVMTransaction_Request>(abiEncodedRequest);
-
         //-$$$<start-verifyEncodedRequest> Start of custom code section. Do not change this comment.
 
         const response = await this.verifyRequest(requestJSON);

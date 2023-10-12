@@ -46,6 +46,7 @@ function randomBodies(fullRandom = false) {
         blockNumber: randSol("uint64", "EVMTransaction" + (fullRandom ? Math.random().toString() : "")),
         timestamp: randSol("uint64", "EVMTransaction" + (fullRandom ? Math.random().toString() : "")),
         sourceAddress: randSol("address", "EVMTransaction" + (fullRandom ? Math.random().toString() : "")),
+        isDeployment: randSol("bool", "EVMTransaction" + (fullRandom ? Math.random().toString() : "")),
         receivingAddress: randSol("address", "EVMTransaction" + (fullRandom ? Math.random().toString() : "")),
         value: randSol("uint256", "EVMTransaction" + (fullRandom ? Math.random().toString() : "")),
         input: randSol("bytes", "EVMTransaction" + (fullRandom ? Math.random().toString() : "")),

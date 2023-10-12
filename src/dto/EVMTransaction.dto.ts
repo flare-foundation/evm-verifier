@@ -218,10 +218,20 @@ export class EVMTransaction_ResponseBody {
     sourceAddress!: string;
 
     /**
-     * The address (to) of the receiver of the initial transaction.
+     * Indicate whether it is a contract creation transaction.
+     */
+    @IsBoolean()
+    @ApiProperty({ description: `Indicate whether it is a contract creation transaction.`, example: true })
+    isDeployment!: boolean;
+
+    /**
+     * The address (to) of the receiver of the initial transaction. Zero address if `isDeployment` is true.
      */
     @Validate(IsEVMAddress)
-    @ApiProperty({ description: `The address (to) of the receiver of the initial transaction.`, example: "0x5d4BEB38B6b71aaF6e30D0F9FeB6e21a7Ac40b3a" })
+    @ApiProperty({
+        description: `The address (to) of the receiver of the initial transaction. Zero address if 'isDeployment' is true.`,
+        example: "0x5d4BEB38B6b71aaF6e30D0F9FeB6e21a7Ac40b3a",
+    })
     receivingAddress!: string;
 
     /**

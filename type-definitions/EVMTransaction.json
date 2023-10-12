@@ -148,7 +148,7 @@
     "description": "Response body for EVM transaction attestation type",
     "above": "",
     "below": "Some field description are elaborated [here](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_gettransactionbyhash).",
-    "fullComment": " @notice Response body for EVM transaction attestation type\n @custom:below Some field description are elaborated [here](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_gettransactionbyhash).\n @param blockNumber Number of the block in which the transaction is included.\n @param timestamp Timestamp of the block in which the transaction is included.\n @param sourceAddress The address (from) that signed the transaction.\n @param receivingAddress The address (to) of the receiver of the initial transaction.\n @param value The value transferred by the initial transaction in wei.\n @param input If `provideInput`, this is the data send along with the initial transaction. Otherwise it is the default value `0x`.\n @param status Status of the transaction 1 - success, 0 - failure.\n @param events If `listEvents` is true, an array of the requested events. Sorted by the logIndex in the same order as `logIndices`. Otherwise, an empty array.",
+    "fullComment": " @notice Response body for EVM transaction attestation type\n @custom:below Some field description are elaborated [here](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_gettransactionbyhash).\n @param blockNumber Number of the block in which the transaction is included.\n @param timestamp Timestamp of the block in which the transaction is included.\n @param sourceAddress The address (from) that signed the transaction.\n @param isDeployment Indicate whether it is a contract creation transaction.\n @param receivingAddress The address (to) of the receiver of the initial transaction. Zero address if `isDeployment` is true.\n @param value The value transferred by the initial transaction in wei.\n @param input If `provideInput`, this is the data send along with the initial transaction. Otherwise it is the default value `0x`.\n @param status Status of the transaction 1 - success, 0 - failure.\n @param events If `listEvents` is true, an array of the requested events. Sorted by the logIndex in the same order as `logIndices`. Otherwise, an empty array.",
     "params": [
       {
         "name": "blockNumber",
@@ -169,10 +169,16 @@
         "comment": "The address (from) that signed the transaction."
       },
       {
+        "name": "isDeployment",
+        "type": "bool",
+        "typeSimple": "bool",
+        "comment": "Indicate whether it is a contract creation transaction."
+      },
+      {
         "name": "receivingAddress",
         "type": "address",
         "typeSimple": "address",
-        "comment": "The address (to) of the receiver of the initial transaction."
+        "comment": "The address (to) of the receiver of the initial transaction. Zero address if `isDeployment` is true."
       },
       {
         "name": "value",
@@ -368,6 +374,11 @@
             "type": "address"
           },
           {
+            "internalType": "bool",
+            "name": "isDeployment",
+            "type": "bool"
+          },
+          {
             "internalType": "address",
             "name": "receivingAddress",
             "type": "address"
@@ -506,6 +517,11 @@
                 "internalType": "address",
                 "name": "sourceAddress",
                 "type": "address"
+              },
+              {
+                "internalType": "bool",
+                "name": "isDeployment",
+                "type": "bool"
               },
               {
                 "internalType": "address",
