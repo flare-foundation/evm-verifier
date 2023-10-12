@@ -38,11 +38,15 @@ export class EVMTransactionVerifierService {
      * @param request
      */
     async verifyRequest(request: EVMTransaction_Request | EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO<EVMTransaction_Response>> {
-        if (request.attestationType !== encodeAttestationName("EVMTransaction") || request.sourceId !== encodeAttestationName("ETH")) {
+        const attestationName = "EVMTransaction";
+        const sourceId= "ETH";
+        const encodedAttestationName = encodeAttestationName(attestationName);
+        const encodedSourceId = encodeAttestationName(sourceId);
+        if (request.attestationType !== encodedAttestationName || request.sourceId !== encodedSourceId) {
             throw new HttpException(
                 {
                     status: HttpStatus.NOT_FOUND,
-                    error: `Attestation type and source id combination not supported: (${request.attestationType}, ${request.sourceId})`,
+                    error: `Attestation type and source id combination not supported: (${request.attestationType}, ${request.sourceId}) supported: encoded(${attestationName})=${encodedAttestationName}, encoded(${sourceId})=${encodedSourceId}`,
                 },
                 HttpStatus.NOT_FOUND,
                 {

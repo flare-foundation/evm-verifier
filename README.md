@@ -13,6 +13,17 @@ This verifier is created based on the [Verifier Server Template](https://gitlab.
 $ yarn
 ```
 
+
+## Configuration
+
+Configuration of the verifier server is carried out through environment variables, specifically by using standard `ConfigModule` from Nest.js, which gets configured from `.env` file in the root of the repository (working directory when run). See details [here](./src/config/configuration.ts).
+
+`PORT` specifies the port that is used for HTTP (default is port number 3000).
+
+`API_KEYS` are keys that allowe connection to the HTTP service.
+
+`RPC` is an optional parameter for a RPC connection (dafault is `https://flare-api.flare.network/ext/C/rpc`).
+
 ## Running the app
 
 ```bash
@@ -30,18 +41,6 @@ $ yarn start:dev
 $ yarn start:prod
 ```
 
-## Test
-
-```bash
-# unit tests
-$ yarn test
-
-# e2e tests
-$ yarn test:e2e
-
-# test coverage
-$ yarn test:cov
-```
 ## Example on Flare network
 
 Copy `.env.example` file and rename it to `.env`.
@@ -66,9 +65,33 @@ Test API routes `/EVMTransaction/prepareResponse`, `/EVMTransaction/mic` and `/E
 
 In order to test the API route `/EVMTransaction` use the output of `/EVMTransaction/prepareRequest`.
 
-## Configuration
+Localy you can check the service with `curl`:
+```
+ curl -X 'POST'   'http://localhost:4500/EVMTransaction/prepareResponse'   -H 'accept: */*'   -H 'X-API-KEY: 12345'   -H 'Content-Type: \application/json'   -d '{\
+       "attestationType": "0x45564d5472616e73616374696f6e000000000000000000000000000000000000",\
+       "sourceId": "0x4554480000000000000000000000000000000000000000000000000000000000",\
+       "requestBody": {\
+       "transactionHash": "0xb11e60decfd2ae39d2ec927fb783aa009c052044c795bf9346f46741f488512c",\
+       "requiredConfirmations": "3",\
+       "provideInput": false,\
+       "listEvents": true,\
+       "logIndices": []\
+     }\
+   }'
+```
 
-Configuration of the verifier server is carried out through environment variables, specifically by using standard `ConfigModule` from Nest.js, which gets configured from `.env` file in the root of the repository (working directory when run). See details [here](./src/config/configuration.ts).
+## Code Tests
+
+```bash
+# unit tests
+$ yarn test
+
+# e2e tests
+$ yarn test:e2e
+
+# test coverage
+$ yarn test:cov
+```
 
 ## License
 

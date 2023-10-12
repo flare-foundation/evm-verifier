@@ -1,0 +1,43 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "node",
+        "request": "launch",
+        "console": "integratedTerminal",
+        "name": "Start:dev",
+        "env": {
+          "SQLITE": "true",
+          "NODE_ENV": "development"
+        },
+        "runtimeExecutable": "yarn",
+        "runtimeArgs": ["start:dev"]
+      },          {
+        "type": "node",
+        "request": "launch",
+        "console": "integratedTerminal",
+        "name": "Run all tests",
+        "env": {
+          "SQLITE": "true",
+          "NODE_ENV": "development"
+        },
+        "runtimeExecutable": "yarn",
+        "runtimeArgs": ["test"]
+      },    
+          {
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "name": "Run specific test",
+            "env": {
+              "SQLITE": "true",
+              "NODE_ENV": "development"
+            },
+            "runtimeExecutable": "yarn",
+            "runtimeArgs": ["test", "src/test/app.e2e.spec.ts"]
+          },
+    ]
+}
