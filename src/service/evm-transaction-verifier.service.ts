@@ -39,7 +39,7 @@ export class EVMTransactionVerifierService {
      */
     async verifyRequest(request: EVMTransaction_Request | EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO<EVMTransaction_Response>> {
         const attestationName = "EVMTransaction";
-        const sourceId= "ETH";
+        const sourceId = "ETH";
         const encodedAttestationName = encodeAttestationName(attestationName);
         const encodedSourceId = encodeAttestationName(sourceId);
         if (request.attestationType !== encodedAttestationName || request.sourceId !== encodedSourceId) {
@@ -116,9 +116,9 @@ export class EVMTransactionVerifierService {
                     timestamp: block.timestamp.toString(),
                     sourceAddress: txInfo.from!,
                     isDeployment: !txInfo.to,
-                    receivingAddress: txInfo.to ? txInfo.to : ZERO_BYTES_20, // !!! can be empty in the response (TODO: how to handle this in hashing)
+                    receivingAddress: txInfo.to ? txInfo.to : ZERO_BYTES_20,
                     value: txInfo.value.toString(),
-                    input: request.requestBody.provideInput ? txInfo.data : "0x00", // !!! can be empty in the response (TODO: how to handle this in hashing),
+                    input: request.requestBody.provideInput ? txInfo.data : "0x00",
                     status: txReceipt.status ? "1" : "0",
                     events,
                 } as unknown as EVMTransaction_ResponseBody,
