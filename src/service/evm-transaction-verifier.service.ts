@@ -94,24 +94,24 @@ export class EVMTransactionVerifierService {
             }
         }
         for (const log of logs) {
-            const event = {
+            const event = new EVMTransaction_Event({
                 logIndex: log.index.toString(),
                 emitterAddress: log.address,
-                topics: log.topics,
+                topics: [...log.topics],
                 data: log.data,
-                removed: log.removed,
-            } as EVMTransaction_Event;
+                removed: log.removed ?? false,
+            });
             events.push(event);
         }
         return {
             status: AttestationResponseStatus.VALID,
-            response: {
+            response: new EVMTransaction_Response({
                 attestationType: request.attestationType,
                 sourceId: request.sourceId,
                 votingRound: "0",
                 lowestUsedTimestamp: block.timestamp.toString(),
                 requestBody: serializeBigInts(request.requestBody),
-                responseBody: {
+                responseBody: new EVMTransaction_ResponseBody({
                     blockNumber: block.number.toString(),
                     timestamp: block.timestamp.toString(),
                     sourceAddress: txInfo.from!,
@@ -121,8 +121,8 @@ export class EVMTransactionVerifierService {
                     input: request.requestBody.provideInput ? txInfo.data : "0x00",
                     status: txReceipt.status ? "1" : "0",
                     events,
-                } as unknown as EVMTransaction_ResponseBody,
-            } as EVMTransaction_Response,
+                }),
+            }),
         };
     }
 
