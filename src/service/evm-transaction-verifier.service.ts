@@ -79,7 +79,7 @@ export class EVMTransactionVerifierService {
         const events: EVMTransaction_Event[] = [];
         let logs: ethers.Log[] = [];
         if (request.requestBody.listEvents) {
-            if (request.requestBody.logIndices.length > 0) {
+            if (request.requestBody.logIndices.length > 0 && 50 > request.requestBody.logIndices.length) {
                 for (const i of request.requestBody.logIndices) {
                     const index = parseInt(i);
                     if (isNaN(index) || index < 0 || index >= txReceipt.logs.length) {
@@ -89,9 +89,18 @@ export class EVMTransactionVerifierService {
                     }
                     logs.push(txReceipt.logs[index]);
                 }
-            } else {
+            } else if (request.requestBody.logIndices.length == 0) {
                 logs = [...txReceipt.logs];
+                logs.splice(50);
+            } else {
+                return {
+                    status: AttestationResponseStatus.INVALID,
+                };
             }
+        } else if (request.requestBody.logIndices.length > 0) {
+            return {
+                status: AttestationResponseStatus.INVALID,
+            };
         }
         for (const log of logs) {
             const event = new EVMTransaction_Event({
