@@ -4,13 +4,13 @@
         "sourceId": "0x4254430000000000000000000000000000000000000000000000000000000000",
         "requestBody": {
             "transactionHash": "0xa331e01051ffed15c6c01e8f2377ece4dba396584a5637cdc0fb32bdd7a75743",
-            "requiredConfirmations": "0xa331",
+            "requiredConfirmations": "41777",
             "provideInput": true,
             "listEvents": true,
             "logIndices": [
-                "0xa331e010",
-                "0xa331e010",
-                "0xa331e010"
+                "2737954832",
+                "2737954832",
+                "2737954832"
             ]
         }
     },
@@ -21,27 +21,27 @@
         "lowestUsedTimestamp": "1234",
         "requestBody": {
             "transactionHash": "0xa331e01051ffed15c6c01e8f2377ece4dba396584a5637cdc0fb32bdd7a75743",
-            "requiredConfirmations": "0xa331",
+            "requiredConfirmations": "41777",
             "provideInput": true,
             "listEvents": true,
             "logIndices": [
-                "0xa331e010",
-                "0xa331e010",
-                "0xa331e010"
+                "2737954832",
+                "2737954832",
+                "2737954832"
             ]
         },
         "responseBody": {
-            "blockNumber": "0xa331e01051ffed15",
-            "timestamp": "0xa331e01051ffed15",
+            "blockNumber": "11759426462740901141",
+            "timestamp": "11759426462740901141",
             "sourceAddress": "0xa331e01051ffed15c6c01e8f2377ece4dba39658",
             "isDeployment": true,
             "receivingAddress": "0xa331e01051ffed15c6c01e8f2377ece4dba39658",
-            "value": "0xa331e01051ffed15c6c01e8f2377ece4dba396584a5637cdc0fb32bdd7a75743",
+            "value": "73815116256422967419391373873539961806339375501277728106246309468811983017795",
             "input": "0xa331e01051ffed15c6c01e8f2377ece4dba396584a5637cdc0fb32bdd7a7",
-            "status": "0xa3",
+            "status": "163",
             "events": [
                 {
-                    "logIndex": "0xa331e010",
+                    "logIndex": "2737954832",
                     "emitterAddress": "0xa331e01051ffed15c6c01e8f2377ece4dba39658",
                     "topics": [
                         "0xa331e01051ffed15c6c01e8f2377ece4dba396584a5637cdc0fb32bdd7a75743",
@@ -52,7 +52,7 @@
                     "removed": true
                 },
                 {
-                    "logIndex": "0xa331e010",
+                    "logIndex": "2737954832",
                     "emitterAddress": "0xa331e01051ffed15c6c01e8f2377ece4dba39658",
                     "topics": [
                         "0xa331e01051ffed15c6c01e8f2377ece4dba396584a5637cdc0fb32bdd7a75743",
@@ -63,7 +63,7 @@
                     "removed": true
                 },
                 {
-                    "logIndex": "0xa331e010",
+                    "logIndex": "2737954832",
                     "emitterAddress": "0xa331e01051ffed15c6c01e8f2377ece4dba39658",
                     "topics": [
                         "0xa331e01051ffed15c6c01e8f2377ece4dba396584a5637cdc0fb32bdd7a75743",
@@ -81,13 +81,13 @@
         "sourceId": "0x4254430000000000000000000000000000000000000000000000000000000000",
         "requestBody": {
             "transactionHash": "0xa331e01051ffed15c6c01e8f2377ece4dba396584a5637cdc0fb32bdd7a75743",
-            "requiredConfirmations": "0xa331",
+            "requiredConfirmations": "41777",
             "provideInput": true,
             "listEvents": true,
             "logIndices": [
-                "0xa331e010",
-                "0xa331e010",
-                "0xa331e010"
+                "2737954832",
+                "2737954832",
+                "2737954832"
             ]
         },
         "messageIntegrityCode": "0x18584c0841e76462159e2ef4acf4941636471dc2a654d70de1c789c4ee002eab"
@@ -104,27 +104,27 @@
             "lowestUsedTimestamp": "1234",
             "requestBody": {
                 "transactionHash": "0xa331e01051ffed15c6c01e8f2377ece4dba396584a5637cdc0fb32bdd7a75743",
-                "requiredConfirmations": "0xa331",
+                "requiredConfirmations": "41777",
                 "provideInput": true,
                 "listEvents": true,
                 "logIndices": [
-                    "0xa331e010",
-                    "0xa331e010",
-                    "0xa331e010"
+                    "2737954832",
+                    "2737954832",
+                    "2737954832"
                 ]
             },
             "responseBody": {
-                "blockNumber": "0xa331e01051ffed15",
-                "timestamp": "0xa331e01051ffed15",
+                "blockNumber": "11759426462740901141",
+                "timestamp": "11759426462740901141",
                 "sourceAddress": "0xa331e01051ffed15c6c01e8f2377ece4dba39658",
                 "isDeployment": true,
                 "receivingAddress": "0xa331e01051ffed15c6c01e8f2377ece4dba39658",
-                "value": "0xa331e01051ffed15c6c01e8f2377ece4dba396584a5637cdc0fb32bdd7a75743",
+                "value": "73815116256422967419391373873539961806339375501277728106246309468811983017795",
                 "input": "0xa331e01051ffed15c6c01e8f2377ece4dba396584a5637cdc0fb32bdd7a7",
-                "status": "0xa3",
+                "status": "163",
                 "events": [
                     {
-                        "logIndex": "0xa331e010",
+                        "logIndex": "2737954832",
                         "emitterAddress": "0xa331e01051ffed15c6c01e8f2377ece4dba39658",
                         "topics": [
                             "0xa331e01051ffed15c6c01e8f2377ece4dba396584a5637cdc0fb32bdd7a75743",
@@ -135,7 +135,7 @@
                         "removed": true
                     },
                     {
-                        "logIndex": "0xa331e010",
+                        "logIndex": "2737954832",
                         "emitterAddress": "0xa331e01051ffed15c6c01e8f2377ece4dba39658",
                         "topics": [
                             "0xa331e01051ffed15c6c01e8f2377ece4dba396584a5637cdc0fb32bdd7a75743",
@@ -146,7 +146,7 @@
                         "removed": true
                     },
                     {
-                        "logIndex": "0xa331e010",
+                        "logIndex": "2737954832",
                         "emitterAddress": "0xa331e01051ffed15c6c01e8f2377ece4dba39658",
                         "topics": [
                             "0xa331e01051ffed15c6c01e8f2377ece4dba396584a5637cdc0fb32bdd7a75743",

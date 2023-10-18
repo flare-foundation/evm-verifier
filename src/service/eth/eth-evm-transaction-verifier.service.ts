@@ -38,22 +38,16 @@ export class ETHEVMTransactionVerifierService {
      * @param request
      */
     async verifyRequest(request: EVMTransaction_Request | EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO<EVMTransaction_Response>> {
-        const attestationName = "EVMTransaction";
-        const sourceId = "ETH";
-        const encodedAttestationName = encodeAttestationName(attestationName);
-        const encodedSourceId = encodeAttestationName(sourceId);
-        if (request.attestationType !== encodedAttestationName || request.sourceId !== encodedSourceId) {
+        if (request.attestationType !== encodeAttestationName("EVMTransaction") || request.sourceId !== encodeAttestationName("ETH")) {
             throw new HttpException(
                 {
-                    status: HttpStatus.NOT_FOUND,
-                    error: `Attestation type and source id combination not supported: (${request.attestationType}, ${request.sourceId}) supported: encoded(${attestationName})=${encodedAttestationName}, encoded(${sourceId})=${encodedSourceId}`,
+                    status: HttpStatus.BAD_REQUEST,
+                    error: `Attestation type and source id combination not supported: (${request.attestationType}, ${request.sourceId}). This source supports attestation type 'EVMTransaction' (0x45564d5472616e73616374696f6e000000000000000000000000000000000000) and source id 'ETH' (0x4554480000000000000000000000000000000000000000000000000000000000).`,
                 },
-                HttpStatus.NOT_FOUND,
-                {
-                    cause: request,
-                },
+                HttpStatus.BAD_REQUEST,
             );
         }
+
         // May except. Error is returned
         const [blockNumber, txInfo, txReceipt] = await Promise.all([
             await this.web3Provider.getBlockNumber(),
@@ -79,7 +73,7 @@ export class ETHEVMTransactionVerifierService {
         const events: EVMTransaction_Event[] = [];
         let logs: ethers.Log[] = [];
         if (request.requestBody.listEvents) {
-            if (request.requestBody.logIndices.length > 0) {
+            if (request.requestBody.logIndices.length > 0 && 50 > request.requestBody.logIndices.length) {
                 for (const i of request.requestBody.logIndices) {
                     const index = parseInt(i);
                     if (isNaN(index) || index < 0 || index >= txReceipt.logs.length) {
@@ -89,9 +83,18 @@ export class ETHEVMTransactionVerifierService {
                     }
                     logs.push(txReceipt.logs[index]);
                 }
-            } else {
+            } else if (request.requestBody.logIndices.length == 0) {
                 logs = [...txReceipt.logs];
+                logs.splice(50);
+            } else {
+                return {
+                    status: AttestationResponseStatus.INVALID,
+                };
             }
+        } else if (request.requestBody.logIndices.length > 0) {
+            return {
+                status: AttestationResponseStatus.INVALID,
+            };
         }
         for (const log of logs) {
             const event = new EVMTransaction_Event({
@@ -110,7 +113,7 @@ export class ETHEVMTransactionVerifierService {
                 sourceId: request.sourceId,
                 votingRound: "0",
                 lowestUsedTimestamp: block.timestamp.toString(),
-                requestBody: serializeBigInts(request.requestBody),
+                requestBody: request.requestBody,
                 responseBody: new EVMTransaction_ResponseBody({
                     blockNumber: block.number.toString(),
                     timestamp: block.timestamp.toString(),
@@ -128,7 +131,7 @@ export class ETHEVMTransactionVerifierService {
 
     //-$$$<end-constructor> End of custom code section. Do not change this comment.
 
-    public async verifyEncodedRequest(abiEncodedRequest: string): Promise<AttestationResponse<EVMTransaction_Response>> {
+    public async verifyEncodedRequest(abiEncodedRequest: string): Promise<AttestationResponseDTO<EVMTransaction_Response>> {
         const requestJSON = this.store.parseRequest<EVMTransaction_Request>(abiEncodedRequest);
         //-$$$<start-verifyEncodedRequest> Start of custom code section. Do not change this comment.
 
@@ -139,7 +142,7 @@ export class ETHEVMTransactionVerifierService {
         return response;
     }
 
-    public async prepareResponse(request: EVMTransaction_RequestNoMic): Promise<AttestationResponse<EVMTransaction_Response>> {
+    public async prepareResponse(request: EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO<EVMTransaction_Response>> {
         //-$$$<start-prepareResponse> Start of custom code section. Do not change this comment.
 
         const response = await this.verifyRequest(request);

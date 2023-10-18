@@ -158,14 +158,14 @@ export class EVMTransaction_Event {
      */
     @Validate(IsUnsignedIntLike)
     @ApiProperty({ description: `The consecutive number of the event in block.`, example: "123" })
-    logIndex!: string;
+    logIndex: string;
 
     /**
      * The address of the contract that emitted the event.
      */
     @Validate(IsEVMAddress)
     @ApiProperty({ description: `The address of the contract that emitted the event.`, example: "0x5d4BEB38B6b71aaF6e30D0F9FeB6e21a7Ac40b3a" })
-    emitterAddress!: string;
+    emitterAddress: string;
 
     /**
      * An array of up to 4 32-byte strings of indexed log arguments. The first string is the signature of the event.
@@ -175,21 +175,21 @@ export class EVMTransaction_Event {
         description: `An array of up to 4 32-byte strings of indexed log arguments. The first string is the signature of the event.`,
         example: ["0x0000000000000000000000000000000000000000000000000000000000000000"],
     })
-    topics!: string[];
+    topics: string[];
 
     /**
      * Concatenated 32-byte strings of non-indexed log arguments. At least 32 bytes long.
      */
     @Validate(Is0xHex)
     @ApiProperty({ description: `Concatenated 32-byte strings of non-indexed log arguments. At least 32 bytes long.`, example: "0x1234abcd" })
-    data!: string;
+    data: string;
 
     /**
      * It is true if log was removed due to a chain reorganization and false if it is a valid log.
      */
     @IsBoolean()
     @ApiProperty({ description: `It is true if log was removed due to a chain reorganization and false if it is a valid log.`, example: true })
-    removed!: boolean;
+    removed: boolean;
 }
 export class EVMTransaction_ResponseBody {
     constructor(params: Required<EVMTransaction_ResponseBody>) {
@@ -201,28 +201,28 @@ export class EVMTransaction_ResponseBody {
      */
     @Validate(IsUnsignedIntLike)
     @ApiProperty({ description: `Number of the block in which the transaction is included.`, example: "123" })
-    blockNumber!: string;
+    blockNumber: string;
 
     /**
      * Timestamp of the block in which the transaction is included.
      */
     @Validate(IsUnsignedIntLike)
     @ApiProperty({ description: `Timestamp of the block in which the transaction is included.`, example: "123" })
-    timestamp!: string;
+    timestamp: string;
 
     /**
      * The address (from) that signed the transaction.
      */
     @Validate(IsEVMAddress)
     @ApiProperty({ description: `The address (from) that signed the transaction.`, example: "0x5d4BEB38B6b71aaF6e30D0F9FeB6e21a7Ac40b3a" })
-    sourceAddress!: string;
+    sourceAddress: string;
 
     /**
      * Indicate whether it is a contract creation transaction.
      */
     @IsBoolean()
     @ApiProperty({ description: `Indicate whether it is a contract creation transaction.`, example: true })
-    isDeployment!: boolean;
+    isDeployment: boolean;
 
     /**
      * The address (to) of the receiver of the initial transaction. Zero address if `isDeployment` is true.
@@ -232,31 +232,31 @@ export class EVMTransaction_ResponseBody {
         description: `The address (to) of the receiver of the initial transaction. Zero address if 'isDeployment' is true.`,
         example: "0x5d4BEB38B6b71aaF6e30D0F9FeB6e21a7Ac40b3a",
     })
-    receivingAddress!: string;
+    receivingAddress: string;
 
     /**
      * The value transferred by the initial transaction in wei.
      */
     @Validate(IsUnsignedIntLike)
     @ApiProperty({ description: `The value transferred by the initial transaction in wei.`, example: "123" })
-    value!: string;
+    value: string;
 
     /**
-     * If `provideInput`, this is the data send along with the initial transaction. Otherwise it is the default value `0x`.
+     * If `provideInput`, this is the data send along with the initial transaction. Otherwise it is the default value `0x00`.
      */
     @Validate(Is0xHex)
     @ApiProperty({
-        description: `If 'provideInput', this is the data send along with the initial transaction. Otherwise it is the default value '0x'.`,
+        description: `If 'provideInput', this is the data send along with the initial transaction. Otherwise it is the default value '0x00'.`,
         example: "0x1234abcd",
     })
-    input!: string;
+    input: string;
 
     /**
      * Status of the transaction 1 - success, 0 - failure.
      */
     @Validate(IsUnsignedIntLike)
     @ApiProperty({ description: `Status of the transaction 1 - success, 0 - failure.`, example: "123" })
-    status!: string;
+    status: string;
 
     /**
      * If `listEvents` is true, an array of the requested events. Sorted by the logIndex in the same order as `logIndices`. Otherwise, an empty array.
@@ -268,7 +268,7 @@ export class EVMTransaction_ResponseBody {
     @ApiProperty({
         description: `If 'listEvents' is true, an array of the requested events. Sorted by the logIndex in the same order as 'logIndices'. Otherwise, an empty array.`,
     })
-    events!: EVMTransaction_Event[];
+    events: EVMTransaction_Event[];
 }
 export class EVMTransaction_RequestBody {
     constructor(params: Required<EVMTransaction_RequestBody>) {
@@ -280,21 +280,21 @@ export class EVMTransaction_RequestBody {
      */
     @Validate(IsHash32)
     @ApiProperty({ description: `Hash of the transaction(transactionHash).`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-    transactionHash!: string;
+    transactionHash: string;
 
     /**
      * The height at which a block is considered confirmed by the requestor.
      */
     @Validate(IsUnsignedIntLike)
     @ApiProperty({ description: `The height at which a block is considered confirmed by the requestor.`, example: "123" })
-    requiredConfirmations!: string;
+    requiredConfirmations: string;
 
     /**
      * If true, "input" field is included in the response.
      */
     @IsBoolean()
     @ApiProperty({ description: `If true, "input" field is included in the response.`, example: true })
-    provideInput!: boolean;
+    provideInput: boolean;
 
     /**
      * If true, events indicated by `logIndices` are included in the response. Otherwise, no events are included in the response.
@@ -304,17 +304,17 @@ export class EVMTransaction_RequestBody {
         description: `If true, events indicated by 'logIndices' are included in the response. Otherwise, no events are included in the response.`,
         example: true,
     })
-    listEvents!: boolean;
+    listEvents: boolean;
 
     /**
-     * Indices of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.
+     * If listeEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvemts is true this is the list of indices of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.
      */
     @Validate(IsUnsignedIntLike, { each: true })
     @ApiProperty({
-        description: `Indices of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.`,
+        description: `If listeEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvemts is true this is the list of indices of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.`,
         example: ["123"],
     })
-    logIndices!: string[];
+    logIndices: string[];
 }
 export class EVMTransaction_Request {
     constructor(params: Required<EVMTransaction_Request>) {
@@ -329,14 +329,14 @@ export class EVMTransaction_Request {
         description: `Attestation type id as defined for each attestation type on [this repo](https://gitlab.com/flarenetwork/state-connector-protocol/)`,
         example: "0x45564d5472616e73616374696f6e000000000000000000000000000000000000",
     })
-    attestationType!: string;
+    attestationType: string;
 
     /**
      * Id of the data source.
      */
     @Validate(IsHash32)
-    @ApiProperty({ description: `Id of the data source.`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-    sourceId!: string;
+    @ApiProperty({ description: `Id of the data source.`, example: "0x4254430000000000000000000000000000000000000000000000000000000000" })
+    sourceId: string;
 
     /**
      * `MessageIntegrityCode` that is derived from the expected response as defined [here](/specs/attestations/hash-MIC.md#message-integrity-code).
@@ -346,7 +346,7 @@ export class EVMTransaction_Request {
         description: `'MessageIntegrityCode' that is derived from the expected response as defined [here](/specs/attestations/hash-MIC.md#message-integrity-code).`,
         example: "0x0000000000000000000000000000000000000000000000000000000000000000",
     })
-    messageIntegrityCode!: string;
+    messageIntegrityCode: string;
 
     /**
      * Data defining the request. Type (struct) and interpretation is determined by the `attestationType`.
@@ -357,7 +357,7 @@ export class EVMTransaction_Request {
     @IsNotEmptyObject()
     @IsObject()
     @ApiProperty({ description: `Data defining the request. Type (struct) and interpretation is determined by the 'attestationType'.` })
-    requestBody!: EVMTransaction_RequestBody;
+    requestBody: EVMTransaction_RequestBody;
 }
 export class EVMTransaction_Response {
     constructor(params: Required<EVMTransaction_Response>) {
@@ -369,28 +369,28 @@ export class EVMTransaction_Response {
      */
     @Validate(IsHash32)
     @ApiProperty({ description: `Extracted from the request.`, example: "0x45564d5472616e73616374696f6e000000000000000000000000000000000000" })
-    attestationType!: string;
+    attestationType: string;
 
     /**
      * Extracted from the request.
      */
     @Validate(IsHash32)
-    @ApiProperty({ description: `Extracted from the request.`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-    sourceId!: string;
+    @ApiProperty({ description: `Extracted from the request.`, example: "0x4254430000000000000000000000000000000000000000000000000000000000" })
+    sourceId: string;
 
     /**
      * The id of the state connector round in which the request was considered.
      */
     @Validate(IsUnsignedIntLike)
     @ApiProperty({ description: `The id of the state connector round in which the request was considered.`, example: "123" })
-    votingRound!: string;
+    votingRound: string;
 
     /**
      * The lowest timestamp used to generate the response.
      */
     @Validate(IsUnsignedIntLike)
     @ApiProperty({ description: `The lowest timestamp used to generate the response.`, example: "123" })
-    lowestUsedTimestamp!: string;
+    lowestUsedTimestamp: string;
 
     /**
      * Extracted from the request.
@@ -401,7 +401,7 @@ export class EVMTransaction_Response {
     @IsNotEmptyObject()
     @IsObject()
     @ApiProperty({ description: `Extracted from the request.` })
-    requestBody!: EVMTransaction_RequestBody;
+    requestBody: EVMTransaction_RequestBody;
 
     /**
      * Data defining the response. The verification rules for the construction of the response body and the type are defined per specific `attestationType`.
@@ -414,7 +414,7 @@ export class EVMTransaction_Response {
     @ApiProperty({
         description: `Data defining the response. The verification rules for the construction of the response body and the type are defined per specific 'attestationType'.`,
     })
-    responseBody!: EVMTransaction_ResponseBody;
+    responseBody: EVMTransaction_ResponseBody;
 }
 export class EVMTransaction_Proof {
     constructor(params: Required<EVMTransaction_Proof>) {
@@ -429,7 +429,7 @@ export class EVMTransaction_Proof {
         description: `Merkle proof corresponding to the attestation response.`,
         example: ["0x0000000000000000000000000000000000000000000000000000000000000000"],
     })
-    merkleProof!: string[];
+    merkleProof: string[];
 
     /**
      * Attestation response.
@@ -440,7 +440,7 @@ export class EVMTransaction_Proof {
     @IsNotEmptyObject()
     @IsObject()
     @ApiProperty({ description: `Attestation response.` })
-    data!: EVMTransaction_Response;
+    data: EVMTransaction_Response;
 }
 
 export class EVMTransaction_RequestNoMic extends OmitType<EVMTransaction_Request, "messageIntegrityCode">(EVMTransaction_Request, [

@@ -38,7 +38,7 @@ describe("AppController (e2e)", () => {
     it("EVMTransaction/prepareResponse", async () => {
         try {
             const { data, status } = await axios.post<Response>(
-                "http://127.0.0.1:3311/EVMTransaction/prepareResponse",
+                "http://127.0.0.1:3311/ETH/EVMTransaction/prepareResponse",
                 {
                     attestationType: "0x45564d5472616e73616374696f6e000000000000000000000000000000000000",
                     sourceId: "0x4554480000000000000000000000000000000000000000000000000000000000",
@@ -58,23 +58,17 @@ describe("AppController (e2e)", () => {
                     },
                 },
             );
-
-            //console.log(status);
-            //console.log(JSON.stringify(data, null, 4));
-
             expect(status).toBe(200);
-
             expect(data).toHaveProperty("status");
             expect(data.status).toBe("VALID");
+            expect((data as any).response.responseBody.sourceAddress).toMatch("0x8a44DC02E250F0f0f388B73a257C53E3BB50321d");
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 console.log("error message: ", error.message);
-                // 👇️ error: AxiosError<any, any>
-                return error.message;
             } else {
                 console.log("unexpected error: ", error);
-                return "An unexpected error occurred";
             }
+            throw error;
         }
     });
 });

@@ -63,21 +63,27 @@ Test API routes `/EVMTransaction/prepareResponse`, `/EVMTransaction/mic` and `/E
 }
 ```
 
-In order to test the API route `/EVMTransaction` use the output of `/EVMTransaction/prepareRequest`.
+In order to test the API route `ETH/EVMTransaction` use the output of `ETH/EVMTransaction/prepareRequest`.
 
-Localy you can check the service with `curl`:
+Locally you can check the service with `curl`:
 ```
- curl -X 'POST'   'http://localhost:4500/EVMTransaction/prepareResponse'   -H 'accept: */*'   -H 'X-API-KEY: 12345'   -H 'Content-Type: \application/json'   -d '{\
-       "attestationType": "0x45564d5472616e73616374696f6e000000000000000000000000000000000000",\
-       "sourceId": "0x4554480000000000000000000000000000000000000000000000000000000000",\
-       "requestBody": {\
-       "transactionHash": "0xb11e60decfd2ae39d2ec927fb783aa009c052044c795bf9346f46741f488512c",\
-       "requiredConfirmations": "3",\
-       "provideInput": false,\
-       "listEvents": true,\
-       "logIndices": []\
-     }\
-   }'
+ curl -X 'POST' \
+  'http://localhost:4500/ETH/EVMTransaction/prepareResponse' \
+  -H 'accept: */*' \
+  -H 'X-API-KEY: 12345' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "attestationType": "0x45564d5472616e73616374696f6e000000000000000000000000000000000000",
+  "sourceId": "0x4554480000000000000000000000000000000000000000000000000000000000",
+  "requestBody": {
+    "transactionHash": "0xe1ad057e71ac82cd2eaaee0dc8700a2c1b6cff4f295a7674b9e97a5f8dd9b51c",
+    "requiredConfirmations": "1",
+    "provideInput": true,
+    "listEvents": true,
+    "logIndices": ["0"]
+  }
+}
+'
 ```
 
 ## Code Tests
