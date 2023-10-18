@@ -6,13 +6,11 @@ Welcome to Flare EVM Transaction Verifier server.
 
 This verifier is created based on the [Verifier Server Template](https://gitlab.com/flarenetwork/verifier-server-template) based on the [EVMTransaction](https://gitlab.com/flarenetwork/state-connector-protocol/-/blob/main/specs/attestations/active-types/EVMTransaction.md). It is implemented by using [Nest](https://github.com/nestjs/nest) framework.
 
-
 ## Installation
 
 ```bash
 $ yarn
 ```
-
 
 ## Configuration
 
@@ -20,14 +18,14 @@ Configuration of the verifier server is carried out through environment variable
 
 `PORT` specifies the port that is used for HTTP (default is port number 3000).
 
-`API_KEYS` are keys that allowe connection to the HTTP service.
+`API_KEYS` are keys that allow connection to the HTTP service.
 
-`RPC` is an optional parameter for a RPC connection (dafault is `https://flare-api.flare.network/ext/C/rpc`).
+`RPC` is an optional parameter for a RPC connection (default is `https://flare-api.flare.network/ext/C/rpc`).
 
 ## Running the app
 
 ```bash
-# Use the default env 
+# Use the default env
 cp .env.example .env
 # Or configure your by editing the .env file
 
@@ -46,7 +44,7 @@ $ yarn start:prod
 Copy `.env.example` file and rename it to `.env`.
 Run the code with `yarn start:dev`
 Check the Swagger interface in browser at `http://localhost:4500/api`.
-Use `Authorize` button to enter API key `abc123`. 
+Use `Authorize` button to enter API key `abc123`.
 Test API routes `/EVMTransaction/prepareResponse`, `/EVMTransaction/mic` and `/EVMTransaction/prepareRequest` with the following parsed request for a transaction on Flare network.
 
 ```
