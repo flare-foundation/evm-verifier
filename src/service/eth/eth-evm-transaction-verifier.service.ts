@@ -50,16 +50,16 @@ export class ETHEVMTransactionVerifierService {
 
         // May except. Error is returned
         const [blockNumber, txInfo, txReceipt] = await Promise.all([
-            await this.web3Provider.getBlockNumber(),
-            await this.web3Provider.getTransaction(request.requestBody.transactionHash),
-            await this.web3Provider.getTransactionReceipt(request.requestBody.transactionHash),
+            this.web3Provider.getBlockNumber(),
+            this.web3Provider.getTransaction(request.requestBody.transactionHash),
+            this.web3Provider.getTransactionReceipt(request.requestBody.transactionHash),
         ]);
         if (!txInfo || !txReceipt) {
             return {
                 status: AttestationResponseStatus.INVALID,
             };
         }
-        if (BigInt(blockNumber) - BigInt(txInfo.blockNumber!) < BigInt(request.requestBody.requiredConfirmations)) {
+        if (BigInt(blockNumber) - BigInt(txInfo.blockNumber!) + BigInt(1) < BigInt(request.requestBody.requiredConfirmations)) {
             return {
                 status: AttestationResponseStatus.INVALID,
             };

@@ -4,7 +4,8 @@
 
 Welcome to Flare EVM Transaction Verifier server.
 
-This verifier is created based on the [Verifier Server Template](https://gitlab.com/flarenetwork/verifier-server-template) based on the [EVMTransaction](https://gitlab.com/flarenetwork/state-connector-protocol/-/blob/main/specs/attestations/active-types/EVMTransaction.md). It is implemented by using [Nest](https://github.com/nestjs/nest) framework.
+This verifier is based on the [Verifier Server Template](https://gitlab.com/flarenetwork/verifier-server-template) according to the attestation type [EVMTransaction](https://gitlab.com/flarenetwork/state-connector-protocol/-/blob/main/specs/attestations/active-types/EVMTransaction.md).
+It is implemented using [Nest](https://github.com/nestjs/nest) framework.
 
 ## Installation
 
@@ -14,7 +15,8 @@ $ yarn
 
 ## Configuration
 
-Configuration of the verifier server is carried out through environment variables, specifically by using standard `ConfigModule` from Nest.js, which gets configured from `.env` file in the root of the repository (working directory when run). See details [here](./src/config/configuration.ts).
+Configuration of the verifier server is carried out through environment variables, specifically by using standard `ConfigModule` from Nest.js, which gets configured from `.env` file in the root of the repository (working directory when run).
+See details [here](./src/config/configuration.ts).
 
 `PORT` specifies the port that is used for HTTP (default is port number 3000).
 
@@ -42,7 +44,7 @@ $ yarn start:prod
 ## Example on Flare network
 
 Copy `.env.example` file and rename it to `.env`.
-Run the code with `yarn start:dev`
+Run the code with `yarn start:dev`.
 Check the Swagger interface in browser at `http://localhost:4500/api`.
 Use `Authorize` button to enter API key `abc123`.
 Test API routes `/EVMTransaction/prepareResponse`, `/EVMTransaction/mic` and `/EVMTransaction/prepareRequest` with the following parsed request for a transaction on Flare network.
@@ -61,9 +63,10 @@ Test API routes `/EVMTransaction/prepareResponse`, `/EVMTransaction/mic` and `/E
 }
 ```
 
-In order to test the API route `ETH/EVMTransaction` use the output of `ETH/EVMTransaction/prepareRequest`.
+In order to test the API route `ETH/EVMTransaction`, use the output of `ETH/EVMTransaction/prepareRequest`.
 
 Locally you can check the service with `curl`:
+
 ```
  curl -X 'POST' \
   'http://localhost:4500/ETH/EVMTransaction/prepareResponse' \
