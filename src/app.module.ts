@@ -4,8 +4,8 @@ import { ApiKeyStrategy } from "./auth/apikey.strategy";
 import { AuthModule } from "./auth/auth.module";
 import { AuthService } from "./auth/auth.service";
 import configuration from "./config/configuration";
-import { EVMTransactionVerifierController } from "./controller/evm-transaction-verifier.controller";
-import { EVMTransactionVerifierService } from "./service/evm-transaction-verifier.service";
+import { ETHEVMTransactionVerifierController } from "./controller/eth/eth-evm-transaction-verifier.controller";
+import { ETHEVMTransactionVerifierService } from "./service/eth/eth-evm-transaction-verifier.service";
 
 @Module({
     imports: [
@@ -15,7 +15,7 @@ import { EVMTransactionVerifierService } from "./service/evm-transaction-verifie
         }),
         AuthModule,
     ],
-    controllers: [EVMTransactionVerifierController],
-    providers: [ApiKeyStrategy, AuthService, EVMTransactionVerifierService],
+    controllers: [ETHEVMTransactionVerifierController],
+    providers: [ApiKeyStrategy, AuthService, ETHEVMTransactionVerifierService],
 })
 export class AppModule {}

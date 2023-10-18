@@ -1,11 +1,11 @@
 import { ConfigModule } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
-import { ApiKeyStrategy } from "../auth/apikey.strategy";
-import { AuthModule } from "../auth/auth.module";
-import { AuthService } from "../auth/auth.service";
-import configuration from "../config/configuration";
-import { EVMTransactionVerifierService } from "../service/evm-transaction-verifier.service";
-import { EVMTransactionVerifierController } from "./evm-transaction-verifier.controller";
+import { ApiKeyStrategy } from "../../auth/apikey.strategy";
+import { AuthModule } from "../../auth/auth.module";
+import { AuthService } from "../../auth/auth.service";
+import configuration from "../../config/configuration";
+import { ETHEVMTransactionVerifierService } from "../../service/eth/eth-evm-transaction-verifier.service";
+import { ETHEVMTransactionVerifierController } from "./eth-evm-transaction-verifier.controller";
 
 const EXAMPLE_ENCODED_REQUEST =
     "0x45564d5472616e73616374696f6e000000000000000000000000000000000000455448000000000000000000000000000000000000000000000000000000000087e8d91c3d07630fe2bf9b85c36d85cfe2d03ba5e63ac054c22ccb0110bebd310000000000000000000000000000000000000000000000000000000000000020e1ad057e71ac82cd2eaaee0dc8700a2c1b6cff4f295a7674b9e97a5f8dd9b51c00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000";
@@ -65,7 +65,7 @@ const EXAMPLE_RESPONSE = {
 const EXPECTED_MIC = "0x87e8d91c3d07630fe2bf9b85c36d85cfe2d03ba5e63ac054c22ccb0110bebd31";
 
 describe("AppController", () => {
-    let appController: EVMTransactionVerifierController;
+    let appController: ETHEVMTransactionVerifierController;
 
     beforeEach(async () => {
         const app: TestingModule = await Test.createTestingModule({
@@ -76,11 +76,11 @@ describe("AppController", () => {
                 }),
                 AuthModule,
             ],
-            controllers: [EVMTransactionVerifierController],
-            providers: [ApiKeyStrategy, AuthService, EVMTransactionVerifierService],
+            controllers: [ETHEVMTransactionVerifierController],
+            providers: [ApiKeyStrategy, AuthService, ETHEVMTransactionVerifierService],
         }).compile();
 
-        appController = app.get<EVMTransactionVerifierController>(EVMTransactionVerifierController);
+        appController = app.get<ETHEVMTransactionVerifierController>(ETHEVMTransactionVerifierController);
     });
 
     describe("root", () => {

@@ -4,18 +4,18 @@
 
 import { Body, Controller, HttpCode, Post, UseGuards } from "@nestjs/common";
 import { ApiSecurity, ApiTags } from "@nestjs/swagger";
-import { ApiKeyAuthGuard } from "../auth/apikey.guard";
+import { ApiKeyAuthGuard } from "../../auth/apikey.guard";
 
-import { EVMTransactionVerifierService } from "../service/evm-transaction-verifier.service";
-import { EVMTransaction_RequestNoMic, EVMTransaction_Response } from "../dto/EVMTransaction.dto";
-import { AttestationResponseDTO, EncodedRequestBody, MicResponse } from "../dto/generic.dto";
+import { ETHEVMTransactionVerifierService } from "../../service/eth/eth-evm-transaction-verifier.service";
+import { EVMTransaction_RequestNoMic, EVMTransaction_Response } from "../../dto/EVMTransaction.dto";
+import { AttestationResponseDTO, EncodedRequestBody, MicResponse } from "../../dto/generic.dto";
 
 @ApiTags("EVMTransaction")
 @Controller("EVMTransaction")
 @UseGuards(ApiKeyAuthGuard)
 @ApiSecurity("X-API-KEY")
-export class EVMTransactionVerifierController {
-    constructor(private readonly verifierService: EVMTransactionVerifierService) {}
+export class ETHEVMTransactionVerifierController {
+    constructor(private readonly verifierService: ETHEVMTransactionVerifierService) {}
 
     /**
      *

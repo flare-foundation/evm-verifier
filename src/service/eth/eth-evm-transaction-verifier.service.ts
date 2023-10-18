@@ -2,22 +2,22 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JsonRpcProvider, ethers } from "ethers";
 import { readFileSync } from "fs";
-import { IConfig } from "../config/configuration";
+import { IConfig } from "../../config/configuration";
 import {
     EVMTransaction_Event,
     EVMTransaction_Request,
     EVMTransaction_RequestNoMic,
     EVMTransaction_Response,
     EVMTransaction_ResponseBody,
-} from "../dto/EVMTransaction.dto";
-import { AttestationResponseDTO } from "../dto/generic.dto";
-import { AttestationDefinitionStore } from "../external-libs/ts/AttestationDefinitionStore";
-import { AttestationResponse, AttestationResponseStatus } from "../external-libs/ts/AttestationResponse";
-import { ExampleData } from "../external-libs/ts/interfaces";
-import { MIC_SALT, ZERO_BYTES_20, ZERO_BYTES_32, encodeAttestationName, serializeBigInts } from "../external-libs/ts/utils";
+} from "../../dto/EVMTransaction.dto";
+import { AttestationResponseDTO } from "../../dto/generic.dto";
+import { AttestationDefinitionStore } from "../../external-libs/ts/AttestationDefinitionStore";
+import { AttestationResponse, AttestationResponseStatus } from "../../external-libs/ts/AttestationResponse";
+import { ExampleData } from "../../external-libs/ts/interfaces";
+import { MIC_SALT, ZERO_BYTES_20, ZERO_BYTES_32, encodeAttestationName, serializeBigInts } from "../../external-libs/ts/utils";
 
 @Injectable()
-export class EVMTransactionVerifierService {
+export class ETHEVMTransactionVerifierService {
     store!: AttestationDefinitionStore;
     exampleData!: ExampleData<EVMTransaction_RequestNoMic, EVMTransaction_Request, EVMTransaction_Response>;
 
