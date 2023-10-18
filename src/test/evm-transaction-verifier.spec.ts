@@ -8,7 +8,6 @@ import { ETHEVMTransactionVerifierController } from "../controller/eth/eth-evm-t
 import { AttestationResponseStatus } from "../external-libs/ts/AttestationResponse";
 import { ETHEVMTransactionVerifierService } from "../service/eth/eth-evm-transaction-verifier.service";
 
-
 const request = {
     attestationType: "0x45564d5472616e73616374696f6e000000000000000000000000000000000000",
     sourceId: "0x4554480000000000000000000000000000000000000000000000000000000000",
