@@ -3,18 +3,13 @@ import { ConfigService } from "@nestjs/config";
 import { JsonRpcProvider, ethers } from "ethers";
 import { readFileSync } from "fs";
 import { IConfig } from "../../config/configuration";
-import {
-    EVMTransaction_Event,
-    EVMTransaction_Request,
-    EVMTransaction_RequestNoMic,
-    EVMTransaction_Response,
-    EVMTransaction_ResponseBody,
-} from "../../dto/EVMTransaction.dto";
+import { EVMTransaction_Request, EVMTransaction_RequestNoMic, EVMTransaction_Response } from "../../dto/EVMTransaction.dto";
 import { AttestationResponseDTO } from "../../dto/generic.dto";
 import { AttestationDefinitionStore } from "../../external-libs/ts/AttestationDefinitionStore";
 import { AttestationResponse, AttestationResponseStatus } from "../../external-libs/ts/AttestationResponse";
 import { ExampleData } from "../../external-libs/ts/interfaces";
-import { MIC_SALT, ZERO_BYTES_20, ZERO_BYTES_32, encodeAttestationName, serializeBigInts } from "../../external-libs/ts/utils";
+import { MIC_SALT, encodeAttestationName, serializeBigInts } from "../../external-libs/ts/utils";
+import { verifyEVMTransactionRequest } from "../../verification/verification";
 
 @Injectable()
 export class ETHEVMTransactionVerifierService {
@@ -47,86 +42,8 @@ export class ETHEVMTransactionVerifierService {
                 HttpStatus.BAD_REQUEST,
             );
         }
-
-        // May except. Error is returned
-        const [blockNumber, txInfo, txReceipt] = await Promise.all([
-            this.web3Provider.getBlockNumber(),
-            this.web3Provider.getTransaction(request.requestBody.transactionHash),
-            this.web3Provider.getTransactionReceipt(request.requestBody.transactionHash),
-        ]);
-        if (!txInfo || !txReceipt) {
-            return {
-                status: AttestationResponseStatus.INVALID,
-            };
-        }
-        if (BigInt(blockNumber) - BigInt(txInfo.blockNumber!) + BigInt(1) < BigInt(request.requestBody.requiredConfirmations)) {
-            return {
-                status: AttestationResponseStatus.INVALID,
-            };
-        }
-        const block = await this.web3Provider.getBlock(txInfo.blockHash!);
-        if (!block) {
-            return {
-                status: AttestationResponseStatus.INVALID,
-            };
-        }
-        const events: EVMTransaction_Event[] = [];
-        let logs: ethers.Log[] = [];
-        if (request.requestBody.listEvents) {
-            if (request.requestBody.logIndices.length > 0 && 50 > request.requestBody.logIndices.length) {
-                for (const i of request.requestBody.logIndices) {
-                    const index = parseInt(i);
-                    if (isNaN(index) || index < 0 || index >= txReceipt.logs.length) {
-                        return {
-                            status: AttestationResponseStatus.INVALID,
-                        };
-                    }
-                    logs.push(txReceipt.logs[index]);
-                }
-            } else if (request.requestBody.logIndices.length == 0) {
-                logs = [...txReceipt.logs];
-                logs.splice(50);
-            } else {
-                return {
-                    status: AttestationResponseStatus.INVALID,
-                };
-            }
-        } else if (request.requestBody.logIndices.length > 0) {
-            return {
-                status: AttestationResponseStatus.INVALID,
-            };
-        }
-        for (const log of logs) {
-            const event = new EVMTransaction_Event({
-                logIndex: log.index.toString(),
-                emitterAddress: log.address,
-                topics: [...log.topics],
-                data: log.data,
-                removed: log.removed ?? false,
-            });
-            events.push(event);
-        }
-        return {
-            status: AttestationResponseStatus.VALID,
-            response: new EVMTransaction_Response({
-                attestationType: request.attestationType,
-                sourceId: request.sourceId,
-                votingRound: "0",
-                lowestUsedTimestamp: block.timestamp.toString(),
-                requestBody: request.requestBody,
-                responseBody: new EVMTransaction_ResponseBody({
-                    blockNumber: block.number.toString(),
-                    timestamp: block.timestamp.toString(),
-                    sourceAddress: txInfo.from!,
-                    isDeployment: !txInfo.to,
-                    receivingAddress: txInfo.to ? txInfo.to : ZERO_BYTES_20,
-                    value: txInfo.value.toString(),
-                    input: request.requestBody.provideInput ? txInfo.data : "0x00",
-                    status: txReceipt.status ? "1" : "0",
-                    events,
-                }),
-            }),
-        };
+        const responseDTO = await verifyEVMTransactionRequest(request, this.web3Provider);
+        return responseDTO;
     }
 
     //-$$$<end-constructor> End of custom code section. Do not change this comment.

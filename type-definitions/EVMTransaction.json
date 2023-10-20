@@ -2,7 +2,9 @@
   "name": "EVMTransaction",
   "fullComment": " @custom:name EVMTransaction\n @custom:id 0x06\n @custom:supported ETH\n @author Flare\n @notice The purpose of this type is to relay transactions from an evm chain to FLARE chain.\n This type is only relevant for the evm-compatible chains.\n @custom:verification If transaction with `transactionId` is contained a block on main branch with at least `requiredConfirmations`, the specified data is relayed.\n If an indicated event does not exist, the request is rejected.\n @custom:lut `timestamp`",
   "description": "The purpose of this type is to relay transactions from an evm chain to FLARE chain.\n This type is only relevant for the evm-compatible chains.",
-  "supported": "ETH",
+  "supported": [
+    "ETH"
+  ],
   "verification": "If transaction with `transactionId` is contained a block on main branch with at least `requiredConfirmations`, the specified data is relayed.\n If an indicated event does not exist, the request is rejected.",
   "lut": "`timestamp`",
   "proof": {
@@ -109,7 +111,7 @@
     "description": "Request body for EVM transaction attestation type",
     "above": "",
     "below": "The contract that uses the attestation should specify the order of event logs as needed and the requestor should sort `logIndices`\n with respect to the set specifications. If possible, the contact should only require one `logIndex`.",
-    "fullComment": " @notice Request body for EVM transaction attestation type\n @custom:below The contract that uses the attestation should specify the order of event logs as needed and the requestor should sort `logIndices`\n with respect to the set specifications. If possible, the contact should only require one `logIndex`.\n @param transactionHash Hash of the transaction(transactionHash).\n @param requiredConfirmations The height at which a block is considered confirmed by the requestor.\n @param provideInput If true, \"input\" field is included in the response.\n @param listEvents If true, events indicated by `logIndices` are included in the response. Otherwise, no events are included in the response.\n @param logIndices If listeEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvemts is true this is the list of indices of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.",
+    "fullComment": " @notice Request body for EVM transaction attestation type\n @custom:below The contract that uses the attestation should specify the order of event logs as needed and the requestor should sort `logIndices`\n with respect to the set specifications. If possible, the contact should only require one `logIndex`.\n @param transactionHash Hash of the transaction(transactionHash).\n @param requiredConfirmations The height at which a block is considered confirmed by the requestor.\n @param provideInput If true, \"input\" field is included in the response.\n @param listEvents If true, events indicated by `logIndices` are included in the response. Otherwise, no events are included in the response.\n @param logIndices If listEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvents is true, this is the list of indices of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.",
     "params": [
       {
         "name": "transactionHash",
@@ -139,7 +141,7 @@
         "name": "logIndices",
         "type": "uint32[]",
         "typeSimple": "uint32[]",
-        "comment": "If listeEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvemts is true this is the list of indices of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50."
+        "comment": "If listEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvents is true, this is the list of indices of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50."
       }
     ]
   },
