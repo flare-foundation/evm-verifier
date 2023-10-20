@@ -1,8 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { JsonRpcProvider, ethers } from "ethers";
 import { readFileSync } from "fs";
-import { IConfig } from "../../config/configuration";
 import { EVMTransaction_Request, EVMTransaction_RequestNoMic, EVMTransaction_Response } from "../../dto/EVMTransaction.dto";
 import { AttestationResponseDTO } from "../../dto/generic.dto";
 import { AttestationDefinitionStore } from "../../external-libs/ts/AttestationDefinitionStore";
@@ -10,9 +7,12 @@ import { AttestationResponse, AttestationResponseStatus } from "../../external-l
 import { ExampleData } from "../../external-libs/ts/interfaces";
 import { MIC_SALT, encodeAttestationName, serializeBigInts } from "../../external-libs/ts/utils";
 import { verifyEVMTransactionRequest } from "../../verification/verification";
+import { JsonRpcProvider, ethers } from "ethers";
+import { ConfigService } from "@nestjs/config";
+import { IConfig } from "../../config/configuration";
 
 @Injectable()
-export class ETHEVMTransactionVerifierService {
+export class FLREVMTransactionVerifierService {
     store!: AttestationDefinitionStore;
     exampleData!: ExampleData<EVMTransaction_RequestNoMic, EVMTransaction_Request, EVMTransaction_Response>;
 
@@ -20,28 +20,28 @@ export class ETHEVMTransactionVerifierService {
 
     web3Provider!: JsonRpcProvider;
 
+    // Add additional class members here.
+    // Augment the constructor with additional (injected) parameters, if required. Update the constructor code.
     constructor(private configService: ConfigService<IConfig>) {
         this.store = new AttestationDefinitionStore("type-definitions");
         this.exampleData = JSON.parse(readFileSync("src/example-data/EVMTransaction.json", "utf8"));
 
-        this.web3Provider = new ethers.JsonRpcProvider(this.configService.get("rpcETH"));
+        this.web3Provider = new ethers.JsonRpcProvider(this.configService.get("rpcFLR"));
     }
 
-    /**
-     * Verifies the EVMTransaction attestation request.
-     * Returns `undefined` if the attestation cannot be verified.
-     * @param request
-     */
+    // Implement the verifyRequest method returning attestation response
     async verifyRequest(request: EVMTransaction_Request | EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO<EVMTransaction_Response>> {
-        if (request.attestationType !== encodeAttestationName("EVMTransaction") || request.sourceId !== encodeAttestationName("ETH")) {
+        if (request.attestationType !== encodeAttestationName("EVMTransaction") || request.sourceId !== encodeAttestationName("FLR")) {
             throw new HttpException(
                 {
                     status: HttpStatus.BAD_REQUEST,
-                    error: `Attestation type and source id combination not supported: (${request.attestationType}, ${request.sourceId}). This source supports attestation type 'EVMTransaction' (0x45564d5472616e73616374696f6e000000000000000000000000000000000000) and source id 'ETH' (0x4554480000000000000000000000000000000000000000000000000000000000).`,
+                    error: `Attestation type and source id combination not supported: (${request.attestationType}, ${request.sourceId}). This source supports attestation type 'EVMTransaction' (0x45564d5472616e73616374696f6e000000000000000000000000000000000000) and source id 'FLR' (0x464c520000000000000000000000000000000000000000000000000000000000).`,
                 },
                 HttpStatus.BAD_REQUEST,
             );
         }
+
+        // PUT YOUR CODE HERE
         const responseDTO = await verifyEVMTransactionRequest(request, this.web3Provider);
         return responseDTO;
     }

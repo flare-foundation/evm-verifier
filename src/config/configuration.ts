@@ -4,7 +4,8 @@ export interface IConfig {
     // comma separated list of API keys (API_KEYS)
     api_keys: string[];
     // RPC endpoint (RPC)
-    rpc: string;
+    rpcETH: string;
+    rpcFLR: string;
 }
 
 export default () => {
@@ -12,7 +13,8 @@ export default () => {
     const config: IConfig = {
         port: parseInt(process.env.PORT || "3000"),
         api_keys,
-        rpc: process.env.RPC || "https://flare-api.flare.network/ext/C/rpc",
+        rpcFLR: process.env.RPC_FLR || "https://flare-api.flare.network/ext/C/rpc",
+        rpcETH: process.env.RPC_ETH || "https://flare-api.flare.network/ext/C/rpc",
     };
     return config;
 };
