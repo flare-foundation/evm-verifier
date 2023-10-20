@@ -47,14 +47,16 @@ export async function verifyEVMTransactionRequest(
     let logs: ethers.Log[] = [];
     if (request.requestBody.listEvents) {
         if (request.requestBody.logIndices.length > 0 && 50 > request.requestBody.logIndices.length) {
+            const firstIndexInTx = txReceipt.logs[0].index;
+
             for (const i of request.requestBody.logIndices) {
                 const index = parseInt(i);
-                if (isNaN(index) || index < 0 || index >= txReceipt.logs.length) {
+                if (isNaN(index) || index < firstIndexInTx || index >= txReceipt.logs.length + firstIndexInTx) {
                     return {
                         status: AttestationResponseStatus.INVALID,
                     };
                 }
-                logs.push(txReceipt.logs[index]);
+                logs.push(txReceipt.logs[index - firstIndexInTx]);
             }
         } else if (request.requestBody.logIndices.length == 0) {
             logs = [...txReceipt.logs];
@@ -69,6 +71,7 @@ export async function verifyEVMTransactionRequest(
             status: AttestationResponseStatus.INVALID,
         };
     }
+
     for (const log of logs) {
         const event = new EVMTransaction_Event({
             logIndex: log.index.toString(),

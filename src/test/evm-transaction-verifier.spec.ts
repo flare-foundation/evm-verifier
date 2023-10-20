@@ -8,6 +8,7 @@ import { ETHEVMTransactionVerifierController } from "../controller/eth/eth-evm-t
 import { AttestationResponseStatus } from "../external-libs/ts/AttestationResponse";
 import { ETHEVMTransactionVerifierService } from "../service/eth/eth-evm-transaction-verifier.service";
 
+//transactions on flare chain
 const request = {
     attestationType: "0x45564d5472616e73616374696f6e000000000000000000000000000000000000",
     sourceId: "0x4554480000000000000000000000000000000000000000000000000000000000",
@@ -17,6 +18,30 @@ const request = {
         provideInput: true,
         listEvents: false,
         logIndices: ["0", "1", "2"],
+    },
+};
+
+const request2 = {
+    attestationType: "0x45564d5472616e73616374696f6e000000000000000000000000000000000000",
+    sourceId: "0x4554480000000000000000000000000000000000000000000000000000000000",
+    requestBody: {
+        transactionHash: "0xc119e71b540950c6e4f73814d34b5e214c3907707354796acca75cd4a84d1439",
+        requiredConfirmations: "1",
+        provideInput: false,
+        listEvents: true,
+        logIndices: ["0", "1", "2"],
+    },
+};
+
+const requestDeploy = {
+    attestationType: "0x45564d5472616e73616374696f6e000000000000000000000000000000000000",
+    sourceId: "0x4554480000000000000000000000000000000000000000000000000000000000",
+    requestBody: {
+        transactionHash: "0xaf687bd9ddde8a5116e2fd82006816be45ea16d76afafd3bf8ea4f89f2bd5eb8",
+        requiredConfirmations: "1",
+        provideInput: false,
+        listEvents: true,
+        logIndices: [],
     },
 };
 
@@ -82,5 +107,26 @@ describe("Verification correctness", () => {
 
         const res = await appController.prepareResponse(request);
         expect(res.status).toBe(AttestationResponseStatus.INVALID);
+    });
+
+    test("should reject faulty indexes", async function () {
+        const res = await appController.prepareResponse(request2);
+        expect(res.status).toBe(AttestationResponseStatus.INVALID);
+    });
+
+    test("should confirm a valid request", async function () {
+        request2.requestBody.logIndices = ["43", "61"];
+        const res = await appController.prepareResponse(request2);
+        expect(res.status).toBe(AttestationResponseStatus.VALID);
+        expect(res.response).toBeDefined();
+        expect(res.response?.responseBody.events.length).toBe(2);
+        expect(res.response?.responseBody.isDeployment).toBe(false);
+    });
+
+    test("should confirm contract deployment", async function () {
+        const res = await appController.prepareResponse(requestDeploy);
+        expect(res.status).toBe(AttestationResponseStatus.VALID);
+        expect(res.response).toBeDefined();
+        expect(res.response?.responseBody.isDeployment).toBe(true);
     });
 });
