@@ -11,11 +11,14 @@ async function bootstrap() {
     app.use(helmet());
     app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-    app.setGlobalPrefix(process.env.APP_BASE_PATH ?? "");
+    const basePath = process.env.APP_BASE_PATH ?? ""
+
+    app.setGlobalPrefix(basePath);
 
     const config = new DocumentBuilder()
         .setTitle("Verifier server template")
         .setDescription("The template to verifier server")
+        .setBasePath(basePath)
         .addApiKey({ type: "apiKey", name: "X-API-KEY", in: "header" }, "X-API-KEY")
         .setVersion("1.0")
         .build();
