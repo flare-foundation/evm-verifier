@@ -23,7 +23,7 @@ async function bootstrap() {
         .setVersion("1.0")
         .build();
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup("api", app, document);
+    SwaggerModule.setup(`${basePath}/api-doc`, app, document);
 
     const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
     console.log(`Your template is available on PORT: ${PORT}`);
