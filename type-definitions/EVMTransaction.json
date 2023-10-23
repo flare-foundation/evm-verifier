@@ -110,8 +110,8 @@
     "name": "RequestBody",
     "description": "Request body for EVM transaction attestation type",
     "above": "",
-    "below": "The contract that uses the attestation should specify the order of event logs as needed and the requestor should sort `logIndices`\n with respect to the set specifications. If possible, the contact should only require one `logIndex`.",
-    "fullComment": " @notice Request body for EVM transaction attestation type\n @custom:below The contract that uses the attestation should specify the order of event logs as needed and the requestor should sort `logIndices`\n with respect to the set specifications. If possible, the contact should only require one `logIndex`.\n @param transactionHash Hash of the transaction(transactionHash).\n @param requiredConfirmations The height at which a block is considered confirmed by the requestor.\n @param provideInput If true, \"input\" field is included in the response.\n @param listEvents If true, events indicated by `logIndices` are included in the response. Otherwise, no events are included in the response.\n @param logIndices If listEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvents is true, this is the list of indices of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.",
+    "below": "Note that events (logs) are indexed in block not in each transaction. The contract that uses the attestation should specify the order of event logs as needed and the requestor should sort `logIndices`\n with respect to the set specifications. If possible, the contact should only require one `logIndex`.",
+    "fullComment": " @notice Request body for EVM transaction attestation type\n @custom:below Note that events (logs) are indexed in block not in each transaction. The contract that uses the attestation should specify the order of event logs as needed and the requestor should sort `logIndices`\n with respect to the set specifications. If possible, the contact should only require one `logIndex`.\n @param transactionHash Hash of the transaction(transactionHash).\n @param requiredConfirmations The height at which a block is considered confirmed by the requestor.\n @param provideInput If true, \"input\" field is included in the response.\n @param listEvents If true, events indicated by `logIndices` are included in the response. Otherwise, no events are included in the response.\n @param logIndices If listEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvents is true, this is the list of indices (logIndex) of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.",
     "params": [
       {
         "name": "transactionHash",
@@ -141,7 +141,7 @@
         "name": "logIndices",
         "type": "uint32[]",
         "typeSimple": "uint32[]",
-        "comment": "If listEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvents is true, this is the list of indices of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50."
+        "comment": "If listEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvents is true, this is the list of indices (logIndex) of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50."
       }
     ]
   },

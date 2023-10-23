@@ -307,11 +307,11 @@ export class EVMTransaction_RequestBody {
     listEvents: boolean;
 
     /**
-     * If listEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvents is true, this is the list of indices of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.
+     * If listEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvents is true, this is the list of indices (logIndex) of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.
      */
     @Validate(IsUnsignedIntLike, { each: true })
     @ApiProperty({
-        description: `If listEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvents is true, this is the list of indices of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.`,
+        description: `If listEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvents is true, this is the list of indices (logIndex) of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.`,
         example: ["123"],
     })
     logIndices: string[];
