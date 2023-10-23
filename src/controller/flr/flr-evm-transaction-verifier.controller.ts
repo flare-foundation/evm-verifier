@@ -11,7 +11,7 @@ import { EVMTransaction_RequestNoMic, EVMTransaction_Response } from "../../dto/
 import { AttestationResponseDTO, EncodedRequestBody, MicResponse } from "../../dto/generic.dto";
 
 @ApiTags("EVMTransaction")
-@Controller("FLR/EVMTransaction")
+@Controller("flr/EVMTransaction")
 @UseGuards(ApiKeyAuthGuard)
 @ApiSecurity("X-API-KEY")
 export class FLREVMTransactionVerifierController {
