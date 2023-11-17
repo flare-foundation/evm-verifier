@@ -6,6 +6,7 @@ export interface IConfig {
     // RPC endpoint (RPC)
     rpcETH: string;
     rpcFLR: string;
+    rpcSGB: string;
 }
 
 export default () => {
@@ -15,6 +16,7 @@ export default () => {
         api_keys,
         rpcFLR: process.env.RPC_FLR || "https://flare-api.flare.network/ext/C/rpc",
         rpcETH: process.env.RPC_ETH || "https://flare-api.flare.network/ext/C/rpc",
+        rpcSGB: process.env.RPC_SGB || "https://flare-api.flare.network/ext/C/rpc",
     };
     return config;
 };

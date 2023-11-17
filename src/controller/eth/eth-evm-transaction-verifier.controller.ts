@@ -7,8 +7,8 @@ import { ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { ApiKeyAuthGuard } from "../../auth/apikey.guard";
 
 import { ETHEVMTransactionVerifierService } from "../../service/eth/eth-evm-transaction-verifier.service";
-import { EVMTransaction_RequestNoMic, EVMTransaction_Response } from "../../dto/EVMTransaction.dto";
-import { AttestationResponseDTO, EncodedRequestBody, MicResponse } from "../../dto/generic.dto";
+import { AttestationResponseDTO_EVMTransaction_Response, EVMTransaction_RequestNoMic } from "../../dto/EVMTransaction.dto";
+import { EncodedRequest, MicResponse, EncodedRequestResponse } from "../../dto/generic.dto";
 
 @ApiTags("EVMTransaction")
 @Controller("eth/EVMTransaction")
@@ -25,7 +25,7 @@ export class ETHEVMTransactionVerifierController {
      */
     @HttpCode(200)
     @Post()
-    async verify(@Body() body: EncodedRequestBody): Promise<AttestationResponseDTO<EVMTransaction_Response>> {
+    async verify(@Body() body: EncodedRequest): Promise<AttestationResponseDTO_EVMTransaction_Response> {
         return this.verifierService.verifyEncodedRequest(body.abiEncodedRequest!);
     }
 
@@ -36,7 +36,7 @@ export class ETHEVMTransactionVerifierController {
      */
     @HttpCode(200)
     @Post("prepareResponse")
-    async prepareResponse(@Body() body: EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO<EVMTransaction_Response>> {
+    async prepareResponse(@Body() body: EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO_EVMTransaction_Response> {
         return this.verifierService.prepareResponse(body);
     }
 
@@ -47,9 +47,7 @@ export class ETHEVMTransactionVerifierController {
     @HttpCode(200)
     @Post("mic")
     async mic(@Body() body: EVMTransaction_RequestNoMic): Promise<MicResponse> {
-        return {
-            messageIntegrityCode: await this.verifierService.mic(body),
-        } as MicResponse;
+        return this.verifierService.mic(body);
     }
 
     /**
@@ -59,9 +57,7 @@ export class ETHEVMTransactionVerifierController {
      */
     @HttpCode(200)
     @Post("prepareRequest")
-    async prepareRequest(@Body() body: EVMTransaction_RequestNoMic): Promise<EncodedRequestBody> {
-        return {
-            abiEncodedRequest: await this.verifierService.prepareRequest(body),
-        } as EncodedRequestBody;
+    async prepareRequest(@Body() body: EVMTransaction_RequestNoMic): Promise<EncodedRequestResponse> {
+        return this.verifierService.prepareRequest(body);
     }
 }

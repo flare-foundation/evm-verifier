@@ -11,7 +11,7 @@ async function bootstrap() {
     app.use(helmet());
     app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-    const basePath = process.env.APP_BASE_PATH ?? ""
+    const basePath = process.env.APP_BASE_PATH ?? "";
 
     app.setGlobalPrefix(basePath);
 

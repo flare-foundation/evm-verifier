@@ -3,12 +3,17 @@ import { ConfigService } from "@nestjs/config";
 import { JsonRpcProvider, ethers } from "ethers";
 import { readFileSync } from "fs";
 import { IConfig } from "../../config/configuration";
-import { EVMTransaction_Request, EVMTransaction_RequestNoMic, EVMTransaction_Response } from "../../dto/EVMTransaction.dto";
-import { AttestationResponseDTO } from "../../dto/generic.dto";
+import {
+    AttestationResponseDTO_EVMTransaction_Response,
+    EVMTransaction_Request,
+    EVMTransaction_RequestNoMic,
+    EVMTransaction_Response,
+} from "../../dto/EVMTransaction.dto";
+import { EncodedRequestResponse, MicResponse } from "../../dto/generic.dto";
 import { AttestationDefinitionStore } from "../../external-libs/ts/AttestationDefinitionStore";
-import { AttestationResponse, AttestationResponseStatus } from "../../external-libs/ts/AttestationResponse";
+import { AttestationResponseStatus } from "../../external-libs/ts/AttestationResponse";
 import { ExampleData } from "../../external-libs/ts/interfaces";
-import { MIC_SALT, encodeAttestationName, serializeBigInts } from "../../external-libs/ts/utils";
+import { MIC_SALT, ZERO_BYTES_32, encodeAttestationName } from "../../external-libs/ts/utils";
 import { verifyEVMTransactionRequest } from "../../verification/verification";
 
 @Injectable()
@@ -27,74 +32,85 @@ export class ETHEVMTransactionVerifierService {
         this.web3Provider = new ethers.JsonRpcProvider(this.configService.get("rpcETH"));
     }
 
-    /**
-     * Verifies the EVMTransaction attestation request.
-     * Returns `undefined` if the attestation cannot be verified.
-     * @param request
-     */
-    async verifyRequest(request: EVMTransaction_Request | EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO<EVMTransaction_Response>> {
-        if (request.attestationType !== encodeAttestationName("EVMTransaction") || request.sourceId !== encodeAttestationName("ETH")) {
+    //-$$$<end-constructor> End of custom code section. Do not change this comment.
+
+    async verifyRequestInternal(request: EVMTransaction_Request | EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO_EVMTransaction_Response> {
+        if (
+            request.attestationType !== encodeAttestationName("EVMTransaction") ||
+            request.sourceId !== encodeAttestationName((process.env.TESTNET ? "test" : "") + "ETH")
+        ) {
             throw new HttpException(
                 {
                     status: HttpStatus.BAD_REQUEST,
-                    error: `Attestation type and source id combination not supported: (${request.attestationType}, ${request.sourceId}). This source supports attestation type 'EVMTransaction' (0x45564d5472616e73616374696f6e000000000000000000000000000000000000) and source id 'ETH' (0x4554480000000000000000000000000000000000000000000000000000000000).`,
+                    error: `Attestation type and source id combination not supported: (${request.attestationType}, ${
+                        request.sourceId
+                    }). This source supports attestation type 'EVMTransaction' (${encodeAttestationName(
+                        "EVMTransaction",
+                    )}) and source id 'ETH' (${encodeAttestationName((process.env.TESTNET ? "test" : "") + "ETH")}).`,
                 },
                 HttpStatus.BAD_REQUEST,
             );
         }
-        const responseDTO = await verifyEVMTransactionRequest(request, this.web3Provider);
+
+        const fixedRequest = {
+            ...request,
+        } as EVMTransaction_Request;
+        if (!fixedRequest.messageIntegrityCode) {
+            fixedRequest.messageIntegrityCode = ZERO_BYTES_32;
+        }
+
+        return this.verifyRequest(fixedRequest);
+    }
+
+    async verifyRequest(fixedRequest: EVMTransaction_Request): Promise<AttestationResponseDTO_EVMTransaction_Response> {
+        //-$$$<start-verifyRequest> Start of custom code section. Do not change this comment.
+
+        const responseDTO = await verifyEVMTransactionRequest(fixedRequest, this.web3Provider);
         return responseDTO;
+
+        //-$$$<end-verifyRequest> End of custom code section. Do not change this comment.
     }
 
-    //-$$$<end-constructor> End of custom code section. Do not change this comment.
-
-    public async verifyEncodedRequest(abiEncodedRequest: string): Promise<AttestationResponseDTO<EVMTransaction_Response>> {
+    public async verifyEncodedRequest(abiEncodedRequest: string): Promise<AttestationResponseDTO_EVMTransaction_Response> {
         const requestJSON = this.store.parseRequest<EVMTransaction_Request>(abiEncodedRequest);
-        //-$$$<start-verifyEncodedRequest> Start of custom code section. Do not change this comment.
-
-        const response = await this.verifyRequest(requestJSON);
-
-        //-$$$<end-verifyEncodedRequest> End of custom code section. Do not change this comment.
-
+        const response = await this.verifyRequestInternal(requestJSON);
         return response;
     }
 
-    public async prepareResponse(request: EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO<EVMTransaction_Response>> {
-        //-$$$<start-prepareResponse> Start of custom code section. Do not change this comment.
-
-        const response = await this.verifyRequest(request);
-
-        //-$$$<end-prepareResponse> End of custom code section. Do not change this comment.
-
+    public async prepareResponse(request: EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO_EVMTransaction_Response> {
+        const response = await this.verifyRequestInternal(request);
         return response;
     }
 
-    public async mic(request: EVMTransaction_RequestNoMic): Promise<string | undefined> {
-        //-$$$<start-mic> Start of custom code section. Do not change this comment.
-
-        const result = await this.verifyRequest(request);
+    public async mic(request: EVMTransaction_RequestNoMic): Promise<MicResponse> {
+        const result = await this.verifyRequestInternal(request);
+        if (result.status !== AttestationResponseStatus.VALID) {
+            return new MicResponse({ status: result.status });
+        }
         const response = result.response;
-
-        //-$$$<end-mic> End of custom code section. Do not change this comment.
-
-        if (!response) return undefined;
-        return this.store.attestationResponseHash<EVMTransaction_Response>(response, MIC_SALT)!;
+        if (!response) return new MicResponse({ status: result.status });
+        return new MicResponse({
+            status: AttestationResponseStatus.VALID,
+            messageIntegrityCode: this.store.attestationResponseHash<EVMTransaction_Response>(response, MIC_SALT),
+        });
     }
 
-    public async prepareRequest(request: EVMTransaction_RequestNoMic): Promise<string | undefined> {
-        //-$$$<start-prepareRequest> Start of custom code section. Do not change this comment.
-
-        const result = await this.verifyRequest(request);
+    public async prepareRequest(request: EVMTransaction_RequestNoMic): Promise<EncodedRequestResponse> {
+        const result = await this.verifyRequestInternal(request);
+        if (result.status !== AttestationResponseStatus.VALID) {
+            return new EncodedRequestResponse({ status: result.status });
+        }
         const response = result.response;
 
-        //-$$$<end-prepareRequest> End of custom code section. Do not change this comment.
-
-        if (!response) return undefined;
+        if (!response) return new EncodedRequestResponse({ status: result.status });
         const newRequest = {
             ...request,
             messageIntegrityCode: this.store.attestationResponseHash<EVMTransaction_Response>(response, MIC_SALT)!,
         } as EVMTransaction_Request;
 
-        return this.store.encodeRequest(newRequest);
+        return new EncodedRequestResponse({
+            status: AttestationResponseStatus.VALID,
+            abiEncodedRequest: this.store.encodeRequest(newRequest),
+        });
     }
 }
