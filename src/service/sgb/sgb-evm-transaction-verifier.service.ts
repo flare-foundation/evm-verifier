@@ -1,8 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { JsonRpcProvider, ethers } from "ethers";
 import { readFileSync } from "fs";
-import { IConfig } from "../../config/configuration";
 import {
     AttestationResponseDTO_EVMTransaction_Response,
     EVMTransaction_Request,
@@ -13,11 +10,14 @@ import { EncodedRequestResponse, MicResponse } from "../../dto/generic.dto";
 import { AttestationDefinitionStore } from "../../external-libs/ts/AttestationDefinitionStore";
 import { AttestationResponseStatus } from "../../external-libs/ts/AttestationResponse";
 import { ExampleData } from "../../external-libs/ts/interfaces";
-import { MIC_SALT, ZERO_BYTES_32, encodeAttestationName } from "../../external-libs/ts/utils";
+import { MIC_SALT, ZERO_BYTES_32, encodeAttestationName, serializeBigInts } from "../../external-libs/ts/utils";
 import { verifyEVMTransactionRequest } from "../../verification/verification";
+import { JsonRpcProvider, ethers } from "ethers";
+import { ConfigService } from "@nestjs/config";
+import { IConfig } from "../../config/configuration";
 
 @Injectable()
-export class FLREVMTransactionVerifierService {
+export class SGBEVMTransactionVerifierService {
     store!: AttestationDefinitionStore;
     exampleData!: ExampleData<EVMTransaction_RequestNoMic, EVMTransaction_Request, EVMTransaction_Response>;
 
@@ -31,7 +31,7 @@ export class FLREVMTransactionVerifierService {
         this.store = new AttestationDefinitionStore("type-definitions");
         this.exampleData = JSON.parse(readFileSync("src/example-data/EVMTransaction.json", "utf8"));
 
-        this.web3Provider = new ethers.JsonRpcProvider(this.configService.get("rpcFLR"));
+        this.web3Provider = new ethers.JsonRpcProvider(this.configService.get("rpcSGB"));
     }
 
     //-$$$<end-constructor> End of custom code section. Do not change this comment.
@@ -39,7 +39,7 @@ export class FLREVMTransactionVerifierService {
     async verifyRequestInternal(request: EVMTransaction_Request | EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO_EVMTransaction_Response> {
         if (
             request.attestationType !== encodeAttestationName("EVMTransaction") ||
-            request.sourceId !== encodeAttestationName((process.env.TESTNET ? "test" : "") + "FLR")
+            request.sourceId !== encodeAttestationName((process.env.TESTNET ? "test" : "") + "SGB")
         ) {
             throw new HttpException(
                 {
@@ -48,7 +48,7 @@ export class FLREVMTransactionVerifierService {
                         request.sourceId
                     }). This source supports attestation type 'EVMTransaction' (${encodeAttestationName(
                         "EVMTransaction",
-                    )}) and source id 'FLR' (${encodeAttestationName((process.env.TESTNET ? "test" : "") + "FLR")}).`,
+                    )}) and source id 'SGB' (${encodeAttestationName((process.env.TESTNET ? "test" : "") + "SGB")}).`,
                 },
                 HttpStatus.BAD_REQUEST,
             );

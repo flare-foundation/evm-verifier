@@ -1,12 +1,12 @@
 import { JsonRpcProvider, ethers } from "ethers";
 import {
+    AttestationResponseDTO_EVMTransaction_Response,
     EVMTransaction_Event,
     EVMTransaction_Request,
     EVMTransaction_RequestNoMic,
     EVMTransaction_Response,
     EVMTransaction_ResponseBody,
 } from "../dto/EVMTransaction.dto";
-import { AttestationResponseDTO } from "../dto/generic.dto";
 import { AttestationResponseStatus } from "../external-libs/ts/AttestationResponse";
 import { ZERO_BYTES_20 } from "../external-libs/ts/utils";
 
@@ -20,7 +20,7 @@ import { ZERO_BYTES_20 } from "../external-libs/ts/utils";
 export async function verifyEVMTransactionRequest(
     request: EVMTransaction_Request | EVMTransaction_RequestNoMic,
     web3Provider: JsonRpcProvider,
-): Promise<AttestationResponseDTO<EVMTransaction_Response>> {
+): Promise<AttestationResponseDTO_EVMTransaction_Response> {
     // May except. Error is thrown
     const [blockNumber, txInfo, txReceipt] = await Promise.all([
         web3Provider.getBlockNumber(),

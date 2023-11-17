@@ -6,16 +6,16 @@ import { Body, Controller, HttpCode, Post, UseGuards } from "@nestjs/common";
 import { ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { ApiKeyAuthGuard } from "../../auth/apikey.guard";
 
-import { FLREVMTransactionVerifierService } from "../../service/flr/flr-evm-transaction-verifier.service";
+import { SGBEVMTransactionVerifierService } from "../../service/sgb/sgb-evm-transaction-verifier.service";
 import { AttestationResponseDTO_EVMTransaction_Response, EVMTransaction_RequestNoMic } from "../../dto/EVMTransaction.dto";
 import { EncodedRequest, MicResponse, EncodedRequestResponse } from "../../dto/generic.dto";
 
 @ApiTags("EVMTransaction")
-@Controller("flr/EVMTransaction")
+@Controller("sgb/EVMTransaction")
 @UseGuards(ApiKeyAuthGuard)
 @ApiSecurity("X-API-KEY")
-export class FLREVMTransactionVerifierController {
-    constructor(private readonly verifierService: FLREVMTransactionVerifierService) {}
+export class SGBEVMTransactionVerifierController {
+    constructor(private readonly verifierService: SGBEVMTransactionVerifierService) {}
 
     /**
      *
