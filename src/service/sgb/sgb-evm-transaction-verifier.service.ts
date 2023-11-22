@@ -1,5 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { JsonRpcProvider, ethers } from "ethers";
 import { readFileSync } from "fs";
+import { IConfig } from "../../config/configuration";
 import {
     AttestationResponseDTO_EVMTransaction_Response,
     EVMTransaction_Request,
@@ -10,11 +13,8 @@ import { EncodedRequestResponse, MicResponse } from "../../dto/generic.dto";
 import { AttestationDefinitionStore } from "../../external-libs/ts/AttestationDefinitionStore";
 import { AttestationResponseStatus } from "../../external-libs/ts/AttestationResponse";
 import { ExampleData } from "../../external-libs/ts/interfaces";
-import { MIC_SALT, ZERO_BYTES_32, encodeAttestationName, serializeBigInts } from "../../external-libs/ts/utils";
+import { MIC_SALT, ZERO_BYTES_32, encodeAttestationName } from "../../external-libs/ts/utils";
 import { verifyEVMTransactionRequest } from "../../verification/verification";
-import { JsonRpcProvider, ethers } from "ethers";
-import { ConfigService } from "@nestjs/config";
-import { IConfig } from "../../config/configuration";
 
 @Injectable()
 export class SGBEVMTransactionVerifierService {
@@ -46,9 +46,9 @@ export class SGBEVMTransactionVerifierService {
                     status: HttpStatus.BAD_REQUEST,
                     error: `Attestation type and source id combination not supported: (${request.attestationType}, ${
                         request.sourceId
-                    }). This source supports attestation type 'EVMTransaction' (${encodeAttestationName(
-                        "EVMTransaction",
-                    )}) and source id 'SGB' (${encodeAttestationName((process.env.TESTNET ? "test" : "") + "SGB")}).`,
+                    }). This source supports attestation type 'EVMTransaction' (${encodeAttestationName("EVMTransaction")}) and source id '${
+                        (process.env.TESTNET ? "test" : "") + "SGB"
+                    }' (${encodeAttestationName((process.env.TESTNET ? "test" : "") + "SGB")}).`,
                 },
                 HttpStatus.BAD_REQUEST,
             );

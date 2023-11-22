@@ -44,9 +44,9 @@ export class ETHEVMTransactionVerifierService {
                     status: HttpStatus.BAD_REQUEST,
                     error: `Attestation type and source id combination not supported: (${request.attestationType}, ${
                         request.sourceId
-                    }). This source supports attestation type 'EVMTransaction' (${encodeAttestationName(
-                        "EVMTransaction",
-                    )}) and source id 'ETH' (${encodeAttestationName((process.env.TESTNET ? "test" : "") + "ETH")}).`,
+                    }). This source supports attestation type 'EVMTransaction' (${encodeAttestationName("EVMTransaction")}) and source id '${
+                        (process.env.TESTNET ? "test" : "") + "ETH"
+                    }' (${encodeAttestationName((process.env.TESTNET ? "test" : "") + "ETH")}).`,
                 },
                 HttpStatus.BAD_REQUEST,
             );

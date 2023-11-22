@@ -46,9 +46,9 @@ export class FLREVMTransactionVerifierService {
                     status: HttpStatus.BAD_REQUEST,
                     error: `Attestation type and source id combination not supported: (${request.attestationType}, ${
                         request.sourceId
-                    }). This source supports attestation type 'EVMTransaction' (${encodeAttestationName(
-                        "EVMTransaction",
-                    )}) and source id 'FLR' (${encodeAttestationName((process.env.TESTNET ? "test" : "") + "FLR")}).`,
+                    }). This source supports attestation type 'EVMTransaction' (${encodeAttestationName("EVMTransaction")}) and source id '${
+                        (process.env.TESTNET ? "test" : "") + "FLR"
+                    }' (${encodeAttestationName((process.env.TESTNET ? "test" : "") + "FLR")}).`,
                 },
                 HttpStatus.BAD_REQUEST,
             );
