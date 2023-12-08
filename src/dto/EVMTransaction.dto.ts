@@ -199,11 +199,11 @@ export class EVMTransaction_Event {
     emitterAddress: string;
 
     /**
-     * An array of up to 4 32-byte strings of indexed log arguments. The first string is the signature of the event.
+     * An array of up to four 32-byte strings of indexed log arguments. The first string is the signature of the event.
      */
     @Validate(IsHash32, { each: true })
     @ApiProperty({
-        description: `An array of up to 4 32-byte strings of indexed log arguments. The first string is the signature of the event.`,
+        description: `An array of up to four 32-byte strings of indexed log arguments. The first string is the signature of the event.`,
         example: ["0x0000000000000000000000000000000000000000000000000000000000000000"],
     })
     topics: string[];
@@ -216,10 +216,10 @@ export class EVMTransaction_Event {
     data: string;
 
     /**
-     * It is true if log was removed due to a chain reorganization and false if it is a valid log.
+     * It is `true` if the log was removed due to a chain reorganization and `false` if it is a valid log.
      */
     @IsBoolean()
-    @ApiProperty({ description: `It is true if log was removed due to a chain reorganization and false if it is a valid log.`, example: true })
+    @ApiProperty({ description: `It is 'true' if the log was removed due to a chain reorganization and 'false' if it is a valid log.`, example: true })
     removed: boolean;
 }
 export class EVMTransaction_ResponseBody {
@@ -256,11 +256,11 @@ export class EVMTransaction_ResponseBody {
     isDeployment: boolean;
 
     /**
-     * The address (to) of the receiver of the initial transaction. Zero address if `isDeployment` is true.
+     * The address (to) of the receiver of the initial transaction. Zero address if `isDeployment` is `true`.
      */
     @Validate(IsEVMAddress)
     @ApiProperty({
-        description: `The address (to) of the receiver of the initial transaction. Zero address if 'isDeployment' is true.`,
+        description: `The address (to) of the receiver of the initial transaction. Zero address if 'isDeployment' is 'true'.`,
         example: "0x5d4BEB38B6b71aaF6e30D0F9FeB6e21a7Ac40b3a",
     })
     receivingAddress: string;
@@ -290,14 +290,14 @@ export class EVMTransaction_ResponseBody {
     status: string;
 
     /**
-     * If `listEvents` is true, an array of the requested events. Sorted by the logIndex in the same order as `logIndices`. Otherwise, an empty array.
+     * If `listEvents` is `true`, an array of the requested events. Sorted by the logIndex in the same order as `logIndices`. Otherwise, an empty array.
      */
     @ValidateNested({ each: true })
     @Type(() => EVMTransaction_Event)
     @IsDefined({ each: true })
     @IsObject({ each: true })
     @ApiProperty({
-        description: `If 'listEvents' is true, an array of the requested events. Sorted by the logIndex in the same order as 'logIndices'. Otherwise, an empty array.`,
+        description: `If 'listEvents' is 'true', an array of the requested events. Sorted by the logIndex in the same order as 'logIndices'. Otherwise, an empty array.`,
     })
     events: EVMTransaction_Event[];
 }
@@ -338,11 +338,11 @@ export class EVMTransaction_RequestBody {
     listEvents: boolean;
 
     /**
-     * If listEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvents is true, this is the list of indices (logIndex) of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.
+     * If `listEvents` is `false`, this should be an empty list, otherwise, the request is rejected. If `listEvents` is `true`, this is the list of indices (logIndex) of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.
      */
     @Validate(IsUnsignedIntLike, { each: true })
     @ApiProperty({
-        description: `If listEvents is false, this should be an empty list, otherwise, the request is rejected. If listEvents is true, this is the list of indices (logIndex) of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.`,
+        description: `If 'listEvents' is 'false', this should be an empty list, otherwise, the request is rejected. If 'listEvents' is 'true', this is the list of indices (logIndex) of the events to be relayed (sorted by the requestor). The array should contain at most 50 indices. If empty, it indicates all events in order capped by 50.`,
         example: ["123"],
     })
     logIndices: string[];
@@ -353,28 +353,25 @@ export class EVMTransaction_Request {
     }
 
     /**
-     * Attestation type id as defined for each attestation type on [this repo](https://gitlab.com/flarenetwork/state-connector-protocol/)
+     * ID of the attestation type.
      */
     @Validate(IsHash32)
-    @ApiProperty({
-        description: `Attestation type id as defined for each attestation type on [this repo](https://gitlab.com/flarenetwork/state-connector-protocol/)`,
-        example: "0x45564d5472616e73616374696f6e000000000000000000000000000000000000",
-    })
+    @ApiProperty({ description: `ID of the attestation type.`, example: "0x45564d5472616e73616374696f6e000000000000000000000000000000000000" })
     attestationType: string;
 
     /**
-     * Id of the data source.
+     * ID of the data source.
      */
     @Validate(IsHash32)
-    @ApiProperty({ description: `Id of the data source.`, example: "0x4254430000000000000000000000000000000000000000000000000000000000" })
+    @ApiProperty({ description: `ID of the data source.`, example: "0x4254430000000000000000000000000000000000000000000000000000000000" })
     sourceId: string;
 
     /**
-     * `MessageIntegrityCode` that is derived from the expected response as defined [here](/specs/attestations/hash-MIC.md#message-integrity-code).
+     * `MessageIntegrityCode` that is derived from the expected response.
      */
     @Validate(IsHash32)
     @ApiProperty({
-        description: `'MessageIntegrityCode' that is derived from the expected response as defined [here](/specs/attestations/hash-MIC.md#message-integrity-code).`,
+        description: `'MessageIntegrityCode' that is derived from the expected response.`,
         example: "0x0000000000000000000000000000000000000000000000000000000000000000",
     })
     messageIntegrityCode: string;
@@ -410,10 +407,10 @@ export class EVMTransaction_Response {
     sourceId: string;
 
     /**
-     * The id of the state connector round in which the request was considered.
+     * The ID of the State Connector round in which the request was considered.
      */
     @Validate(IsUnsignedIntLike)
-    @ApiProperty({ description: `The id of the state connector round in which the request was considered.`, example: "123" })
+    @ApiProperty({ description: `The ID of the State Connector round in which the request was considered.`, example: "123" })
     votingRound: string;
 
     /**
