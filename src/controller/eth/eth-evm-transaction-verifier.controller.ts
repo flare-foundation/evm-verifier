@@ -9,6 +9,7 @@ import { ApiKeyAuthGuard } from "../../auth/apikey.guard";
 import { ETHEVMTransactionVerifierService } from "../../service/eth/eth-evm-transaction-verifier.service";
 import { AttestationResponseDTO_EVMTransaction_Response, EVMTransaction_RequestNoMic } from "../../dto/EVMTransaction.dto";
 import { EncodedRequest, MicResponse, EncodedRequestResponse } from "../../dto/generic.dto";
+import { AttestationResponseDTO_EVMTransaction_ResponseEncoded } from "../../dto/fdcTransactions.dto";
 
 @ApiTags("EVMTransaction")
 @Controller("eth/EVMTransaction")
@@ -21,12 +22,19 @@ export class ETHEVMTransactionVerifierController {
      *
      * Tries to verify encoded attestation request without checking message integrity code, and if successful it returns response.
      * @param verifierBody
+     * @deprecated
      * @returns
      */
     @HttpCode(200)
     @Post()
     async verify(@Body() body: EncodedRequest): Promise<AttestationResponseDTO_EVMTransaction_Response> {
         return this.verifierService.verifyEncodedRequest(body.abiEncodedRequest!);
+    }
+
+    @HttpCode(200)
+    @Post("verifyFDC")
+    async verifyFDC(@Body() body: EncodedRequest): Promise<AttestationResponseDTO_EVMTransaction_ResponseEncoded> {
+        return this.verifierService.verifyEncodedRequestFDC(body.abiEncodedRequest!);
     }
 
     /**
