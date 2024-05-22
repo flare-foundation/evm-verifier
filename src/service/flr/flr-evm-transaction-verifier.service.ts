@@ -39,7 +39,7 @@ export class FLREVMTransactionVerifierService {
     async verifyRequestInternal(request: EVMTransaction_Request | EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO_EVMTransaction_Response> {
         if (
             request.attestationType !== encodeAttestationName("EVMTransaction") ||
-            request.sourceId !== encodeAttestationName((process.env.TESTNET ? "test" : "") + "FLR")
+            request.sourceId !== encodeAttestationName((process.env.TESTNET == "true" ? "test" : "") + "FLR")
         ) {
             throw new HttpException(
                 {
@@ -47,8 +47,8 @@ export class FLREVMTransactionVerifierService {
                     error: `Attestation type and source id combination not supported: (${request.attestationType}, ${
                         request.sourceId
                     }). This source supports attestation type 'EVMTransaction' (${encodeAttestationName("EVMTransaction")}) and source id '${
-                        (process.env.TESTNET ? "test" : "") + "FLR"
-                    }' (${encodeAttestationName((process.env.TESTNET ? "test" : "") + "FLR")}).`,
+                        (process.env.TESTNET == "true" ? "test" : "") + "FLR"
+                    }' (${encodeAttestationName((process.env.TESTNET == "true" ? "test" : "") + "FLR")}).`,
                 },
                 HttpStatus.BAD_REQUEST,
             );

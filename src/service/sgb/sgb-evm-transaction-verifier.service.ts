@@ -39,7 +39,7 @@ export class SGBEVMTransactionVerifierService {
     async verifyRequestInternal(request: EVMTransaction_Request | EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO_EVMTransaction_Response> {
         if (
             request.attestationType !== encodeAttestationName("EVMTransaction") ||
-            request.sourceId !== encodeAttestationName((process.env.TESTNET ? "test" : "") + "SGB")
+            request.sourceId !== encodeAttestationName((process.env.TESTNET == "true" ? "test" : "") + "SGB")
         ) {
             throw new HttpException(
                 {
@@ -47,8 +47,8 @@ export class SGBEVMTransactionVerifierService {
                     error: `Attestation type and source id combination not supported: (${request.attestationType}, ${
                         request.sourceId
                     }). This source supports attestation type 'EVMTransaction' (${encodeAttestationName("EVMTransaction")}) and source id '${
-                        (process.env.TESTNET ? "test" : "") + "SGB"
-                    }' (${encodeAttestationName((process.env.TESTNET ? "test" : "") + "SGB")}).`,
+                        (process.env.TESTNET == "true" ? "test" : "") + "SGB"
+                    }' (${encodeAttestationName((process.env.TESTNET == "true" ? "test" : "") + "SGB")}).`,
                 },
                 HttpStatus.BAD_REQUEST,
             );

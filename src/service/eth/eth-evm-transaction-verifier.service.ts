@@ -37,7 +37,7 @@ export class ETHEVMTransactionVerifierService {
     async verifyRequestInternal(request: EVMTransaction_Request | EVMTransaction_RequestNoMic): Promise<AttestationResponseDTO_EVMTransaction_Response> {
         if (
             request.attestationType !== encodeAttestationName("EVMTransaction") ||
-            request.sourceId !== encodeAttestationName((process.env.TESTNET ? "test" : "") + "ETH")
+            request.sourceId !== encodeAttestationName((process.env.TESTNET == "true" ? "test" : "") + "ETH")
         ) {
             throw new HttpException(
                 {
@@ -45,8 +45,8 @@ export class ETHEVMTransactionVerifierService {
                     error: `Attestation type and source id combination not supported: (${request.attestationType}, ${
                         request.sourceId
                     }). This source supports attestation type 'EVMTransaction' (${encodeAttestationName("EVMTransaction")}) and source id '${
-                        (process.env.TESTNET ? "test" : "") + "ETH"
-                    }' (${encodeAttestationName((process.env.TESTNET ? "test" : "") + "ETH")}).`,
+                        (process.env.TESTNET == "true" ? "test" : "") + "ETH"
+                    }' (${encodeAttestationName((process.env.TESTNET == "true" ? "test" : "") + "ETH")}).`,
                 },
                 HttpStatus.BAD_REQUEST,
             );
