@@ -9,6 +9,7 @@ import { ApiKeyAuthGuard } from "../../auth/apikey.guard";
 import { SGBEVMTransactionVerifierService } from "../../service/sgb/sgb-evm-transaction-verifier.service";
 import { AttestationResponseDTO_EVMTransaction_Response, EVMTransaction_RequestNoMic } from "../../dto/EVMTransaction.dto";
 import { EncodedRequest, MicResponse, EncodedRequestResponse } from "../../dto/generic.dto";
+import { AttestationResponseDTO_EVMTransaction_ResponseEncoded } from "../../dto/fdcTransactions.dto";
 
 @ApiTags("EVMTransaction")
 @Controller("sgb/EVMTransaction")
@@ -27,6 +28,12 @@ export class SGBEVMTransactionVerifierController {
     @Post()
     async verify(@Body() body: EncodedRequest): Promise<AttestationResponseDTO_EVMTransaction_Response> {
         return this.verifierService.verifyEncodedRequest(body.abiEncodedRequest!);
+    }
+
+    @HttpCode(200)
+    @Post("verifyFDC")
+    async verifyFDC(@Body() body: EncodedRequest): Promise<AttestationResponseDTO_EVMTransaction_ResponseEncoded> {
+        return this.verifierService.verifyEncodedRequestFDC(body.abiEncodedRequest!);
     }
 
     /**

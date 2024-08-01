@@ -15,6 +15,7 @@ import { AttestationResponseStatus } from "../../external-libs/ts/AttestationRes
 import { ExampleData } from "../../external-libs/ts/interfaces";
 import { MIC_SALT, ZERO_BYTES_32, encodeAttestationName } from "../../external-libs/ts/utils";
 import { verifyEVMTransactionRequest } from "../../verification/verification";
+import { AttestationResponseDTO_EVMTransaction_ResponseEncoded } from "../../dto/fdcTransactions.dto";
 
 @Injectable()
 export class SGBEVMTransactionVerifierService {
@@ -114,5 +115,20 @@ export class SGBEVMTransactionVerifierService {
             status: AttestationResponseStatus.VALID,
             abiEncodedRequest: this.store.encodeRequest(newRequest),
         });
+    }
+
+    public async verifyEncodedRequestFDC(abiEncodedRequest: string): Promise<AttestationResponseDTO_EVMTransaction_ResponseEncoded> {
+        const requestJSON = this.store.parseRequest<EVMTransaction_Request>(abiEncodedRequest);
+        const response = await this.verifyRequestInternal(requestJSON);
+        if (response.status !== AttestationResponseStatus.VALID || !response.response) {
+            return {
+                status: response.status,
+            };
+        }
+        const encoded = this.store.encodeResponse(response.response);
+        return {
+            status: response.status,
+            abiEncodedResponse: encoded,
+        };
     }
 }
