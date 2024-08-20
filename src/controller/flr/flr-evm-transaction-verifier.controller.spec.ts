@@ -4,15 +4,15 @@ import { ApiKeyStrategy } from "../../auth/apikey.strategy";
 import { AuthModule } from "../../auth/auth.module";
 import { AuthService } from "../../auth/auth.service";
 import configuration from "../../config/configuration";
-import { ETHEVMTransactionVerifierService } from "../../service/eth/eth-evm-transaction-verifier.service";
-import { ETHEVMTransactionVerifierController } from "./eth-evm-transaction-verifier.controller";
+import { FLREVMTransactionVerifierController } from "./flr-evm-transaction-verifier.controller";
+import { FLREVMTransactionVerifierService } from "../../service/flr/flr-evm-transaction-verifier.service";
 
 const EXAMPLE_ENCODED_REQUEST =
-    "0x45564d5472616e73616374696f6e000000000000000000000000000000000000455448000000000000000000000000000000000000000000000000000000000087e8d91c3d07630fe2bf9b85c36d85cfe2d03ba5e63ac054c22ccb0110bebd310000000000000000000000000000000000000000000000000000000000000020e1ad057e71ac82cd2eaaee0dc8700a2c1b6cff4f295a7674b9e97a5f8dd9b51c00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000";
+    "0x45564d5472616e73616374696f6e000000000000000000000000000000000000464c520000000000000000000000000000000000000000000000000000000000b046e06fc597c21b0d329ce4c1df55bef28d2fd1f261d6ee35f05f21790e51e60000000000000000000000000000000000000000000000000000000000000020e1ad057e71ac82cd2eaaee0dc8700a2c1b6cff4f295a7674b9e97a5f8dd9b51c00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000";
 
 const EXAMPLE_REQUEST_NOMIC = {
     attestationType: "0x45564d5472616e73616374696f6e000000000000000000000000000000000000",
-    sourceId: "0x4554480000000000000000000000000000000000000000000000000000000000",
+    sourceId: "0x464c520000000000000000000000000000000000000000000000000000000000",
     requestBody: {
         transactionHash: "0xe1ad057e71ac82cd2eaaee0dc8700a2c1b6cff4f295a7674b9e97a5f8dd9b51c",
         requiredConfirmations: "1",
@@ -26,7 +26,7 @@ const EXAMPLE_RESPONSE = {
     status: "VALID",
     response: {
         attestationType: "0x45564d5472616e73616374696f6e000000000000000000000000000000000000",
-        sourceId: "0x4554480000000000000000000000000000000000000000000000000000000000",
+        sourceId: "0x464c520000000000000000000000000000000000000000000000000000000000",
         votingRound: "0",
         lowestUsedTimestamp: "1696806248",
         requestBody: {
@@ -62,10 +62,10 @@ const EXAMPLE_RESPONSE = {
     },
 };
 
-const EXPECTED_MIC = "0x87e8d91c3d07630fe2bf9b85c36d85cfe2d03ba5e63ac054c22ccb0110bebd31";
+const EXPECTED_MIC = "0xb046e06fc597c21b0d329ce4c1df55bef28d2fd1f261d6ee35f05f21790e51e6";
 
-describe("AppController", () => {
-    let appController: ETHEVMTransactionVerifierController;
+describe("AppController for FLR (Must have FLR mainnet RPC configure in .env)", () => {
+    let appController: FLREVMTransactionVerifierController;
 
     beforeEach(async () => {
         const app: TestingModule = await Test.createTestingModule({
@@ -76,11 +76,11 @@ describe("AppController", () => {
                 }),
                 AuthModule,
             ],
-            controllers: [ETHEVMTransactionVerifierController],
-            providers: [ApiKeyStrategy, AuthService, ETHEVMTransactionVerifierService],
+            controllers: [FLREVMTransactionVerifierController],
+            providers: [ApiKeyStrategy, AuthService, FLREVMTransactionVerifierService],
         }).compile();
 
-        appController = app.get<ETHEVMTransactionVerifierController>(ETHEVMTransactionVerifierController);
+        appController = app.get<FLREVMTransactionVerifierController>(FLREVMTransactionVerifierController);
     });
 
     describe("root", () => {
@@ -91,15 +91,18 @@ describe("AppController", () => {
             expect(actualRes.status).toEqual("VALID");
             expect(JSON.parse(JSON.stringify(actualRes.response))).toStrictEqual(EXAMPLE_RESPONSE.response);
         });
+
         it("should prepare response", async () => {
             const actualRes = await appController.prepareResponse(EXAMPLE_REQUEST_NOMIC);
             expect(actualRes.status).toEqual("VALID");
             expect(JSON.parse(JSON.stringify(actualRes.response))).toStrictEqual(EXAMPLE_RESPONSE.response);
         });
+
         it("should obtain 'mic'", async () => {
             const actualMic = await appController.mic(EXAMPLE_REQUEST_NOMIC);
             expect(actualMic.messageIntegrityCode).toStrictEqual(EXPECTED_MIC);
         });
+
         it("should prepare request", async () => {
             const actualRequest = await appController.prepareRequest(EXAMPLE_REQUEST_NOMIC);
             expect(actualRequest.abiEncodedRequest).toStrictEqual(EXAMPLE_ENCODED_REQUEST);
