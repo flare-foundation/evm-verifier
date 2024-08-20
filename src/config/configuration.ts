@@ -14,7 +14,7 @@ export interface IConfig {
 export type EVMTransactionSources = "ETH" | "FLR" | "SGB";
 export type IGetRPCSource = (source: EVMTransactionSources) => string;
 
-function getRPCSource(source: EVMTransactionSources, config: IConfig): string {
+function getRPCSource(source: EVMTransactionSources): string {
     switch (source) {
         case "ETH":
             return process.env.RPC_ETH || "https://flare-api.flare.network/ext/C/rpc";
@@ -31,7 +31,7 @@ export default () => {
     const config: IConfig = {
         port: parseInt(process.env.PORT || "3000"),
         api_keys,
-        getRPCSource: (source: EVMTransactionSources) => getRPCSource(source, config),
+        getRPCSource: (source: EVMTransactionSources) => getRPCSource(source),
         isTestnet,
     };
     return config;
