@@ -10,6 +10,8 @@ import { SGBEVMTransactionVerifierController } from "./controller/sgb/sgb-evm-tr
 import { ETHEVMTransactionVerifierService } from "./service/eth/eth-evm-transaction-verifier.service";
 import { FLREVMTransactionVerifierService } from "./service/flr/flr-evm-transaction-verifier.service";
 import { SGBEVMTransactionVerifierService } from "./service/sgb/sgb-evm-transaction-verifier.service";
+import { ETHHealthController, FLRHealthController, SGBHealthController } from "./controller/health.controller";
+import { SGBEvmHealthServiceBase, FLREvmHealthServiceBase, ETHEvmHealthServiceBase } from "./service/health.service";
 
 @Module({
     imports: [
@@ -19,7 +21,23 @@ import { SGBEVMTransactionVerifierService } from "./service/sgb/sgb-evm-transact
         }),
         AuthModule,
     ],
-    controllers: [ETHEVMTransactionVerifierController, FLREVMTransactionVerifierController, SGBEVMTransactionVerifierController],
-    providers: [ApiKeyStrategy, AuthService, ETHEVMTransactionVerifierService, FLREVMTransactionVerifierService, SGBEVMTransactionVerifierService],
+    controllers: [
+        ETHEVMTransactionVerifierController,
+        FLREVMTransactionVerifierController,
+        SGBEVMTransactionVerifierController,
+        SGBHealthController,
+        FLRHealthController,
+        ETHHealthController,
+    ],
+    providers: [
+        ApiKeyStrategy,
+        AuthService,
+        ETHEVMTransactionVerifierService,
+        FLREVMTransactionVerifierService,
+        SGBEVMTransactionVerifierService,
+        SGBEvmHealthServiceBase,
+        FLREvmHealthServiceBase,
+        ETHEvmHealthServiceBase,
+    ],
 })
 export class AppModule {}

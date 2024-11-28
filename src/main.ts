@@ -16,8 +16,8 @@ async function bootstrap() {
     app.setGlobalPrefix(basePath);
 
     const config = new DocumentBuilder()
-        .setTitle("Verifier server template")
-        .setDescription("The template to verifier server")
+        .setTitle("EVM transaction verifier server")
+        .setDescription("The verifier server to prepare and verify EVM transactions")
         .setBasePath(basePath)
         .addApiKey({ type: "apiKey", name: "X-API-KEY", in: "header" }, "X-API-KEY")
         .setVersion("1.0")
